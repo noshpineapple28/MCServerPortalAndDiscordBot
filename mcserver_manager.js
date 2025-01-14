@@ -12,6 +12,24 @@ let SERVERS;
 let io;
 
 /**
+ * command to start the mc server
+ */
+function startServer() {
+  MCSERVER.stdin.write("java -Xmx4G -Xms4G -jar server.jar\n");
+  SERVERS["Continuum"].status = "idle";
+  io.emit("status", SERVERS);
+}
+
+/**
+ * command to stop the mc server
+ */
+function stopServer() {
+  MCSERVER.stdin.write("stop\n");
+  SERVERS["Continuum"].status = "turning_off";
+  io.emit("status", SERVERS);
+}
+
+/**
  * stderr and stdexit hopefully will never print
  */
 MCSERVER.stderr.on("data", (data) => {
@@ -36,6 +54,8 @@ MCSERVER.stdout.on("data", (data) => {
     // alert users that the server turned off
     SERVERS["Continuum"].status = "off";
     io.emit("status", SERVERS);
+    // sends a discord message
+    parseEvent("EVENT;STOP");
   }
   // if the message contains DISCORDCONTINUUM then its a plugin event
   else if (STR.includes("DISCORDCONTINUUM;")) {
@@ -51,6 +71,8 @@ MCSERVER.stdout.on("data", (data) => {
     io.emit("console_server_start", "67.20.244.249:25565");
     // alert users that the server has properly turned on
     SERVERS["Continuum"].status = "on";
+    // sends a discord message
+    parseEvent("EVENT;START");
     io.emit("status", SERVERS);
   }
   // server pause, turn it off
@@ -82,4 +104,4 @@ function startServerManager(socketIOConnection, discordHandler, serverData) {
 }
 
 // exports
-module.exports = { startServerManager };
+module.exports = { startServerManager, startServer, stopServer };

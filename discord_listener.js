@@ -1,5 +1,8 @@
+const fs = require("node:fs");
+const path = require("node:path");
 const {
   Client,
+  Collection,
   Events,
   GatewayIntentBits,
   ActivityType,
@@ -21,12 +24,35 @@ const ALERT_TYPES = {
 };
 
 /**
- * starts the discord bot client to allow it to respond and react 
+ * starts the discord bot client to allow it to respond and react
  *    to plugin updates
  */
 function startClient() {
   // Create a new client instance
   client = new Client({ intents: [GatewayIntentBits.Guilds] });
+  // set slash commands
+  client.commands = new Collection();
+  const foldersPath = path.join(__dirname, "commands");
+  const commandFolders = fs.readdirSync(foldersPath);
+
+  for (const folder of commandFolders) {
+    const commandsPath = path.join(foldersPath, folder);
+    const commandFiles = fs
+      .readdirSync(commandsPath)
+      .filter((file) => file.endsWith(".js"));
+    for (const file of commandFiles) {
+      const filePath = path.join(commandsPath, file);
+      const command = require(filePath);
+      // Set a new item in the Collection with the key as the command name and the value as the exported module
+      if ("data" in command && "execute" in command) {
+        client.commands.set(command.data.name, command);
+      } else {
+        console.log(
+          `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+        );
+      }
+    }
+  }
 
   // When the client is ready, run this code (only once).
   // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
@@ -49,6 +75,36 @@ function startClient() {
         if (channel[1].name === "continuum") {
           CHANNEL_IDS.push(channel[1].id);
         }
+      }
+    }
+  });
+
+  client.on(Events.InteractionCreate, async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    const command = interaction.client.commands.get(interaction.commandName);
+
+    if (!command) {
+      console.error(
+        `No command matching ${interaction.commandName} was found.`
+      );
+      return;
+    }
+
+    try {
+      await command.execute(interaction);
+    } catch (error) {
+      console.error(error);
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp({
+          content: "There was an error while executing this command!",
+          flags: MessageFlags.Ephemeral,
+        });
+      } else {
+        await interaction.reply({
+          content: "There was an error while executing this command!",
+          flags: MessageFlags.Ephemeral,
+        });
       }
     }
   });
@@ -87,6 +143,14 @@ function parseEvent(event) {
       embeds.push(buildDeathEmbed(event_details[2], event_details[3]));
       break;
     }
+    case "START": {
+      embeds.push(buildStartupEmbed());
+      break;
+    }
+    case "STOP": {
+      embeds.push(buildStopEmbed());
+      break;
+    }
     default: {
       console.log("Non Embed event: ", event);
       return;
@@ -100,6 +164,30 @@ function parseEvent(event) {
       embeds: embeds,
     });
   }
+}
+
+function buildStartupEmbed() {
+  console.log("Startup message sent");
+  return new EmbedBuilder()
+    .setColor(0x5bcc5b)
+    .setTitle("Continuum Server Status")
+    .setDescription(`The server is online`)
+    .setAuthor({
+      name: "Continuum Server Manager",
+      iconURL: "https://people.rit.edu/nam6711/icon.png",
+    })
+}
+
+function buildStopEmbed() {
+  console.log("Stop message sent");
+  return new EmbedBuilder()
+    .setColor(0xffffff)
+    .setTitle("Continuum Server Status")
+    .setDescription(`The server is offline`)
+    .setAuthor({
+      name: "Continuum Server Manager",
+      iconURL: "https://people.rit.edu/nam6711/icon.png",
+    })
 }
 
 /**

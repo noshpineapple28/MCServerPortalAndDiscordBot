@@ -1,7 +1,12 @@
 const express = require("express");
 const { startClient, parseEvent } = require("./discord_listener");
-const { startServerManager } = require("./mcserver_manager");
-const { server_ip } = require("./config.json")
+const {
+  startServerManager,
+  startServer,
+  stopServer,
+} = require("./mcserver_manager");
+const { initializeCommands } = require("./command_manager");
+const { server_ip } = require("./config.json");
 const socketIO = require("socket.io");
 const http = require("http");
 const app = express();
@@ -18,7 +23,9 @@ const SERVERS = {
     ip: server_ip,
   },
 };
+
 // start discord client
+initializeCommands(SERVERS);
 startClient();
 // start minecraft server manager
 const MCSERVER = startServerManager(io, parseEvent, SERVERS);
@@ -47,7 +54,7 @@ io.on("connection", (socket) => {
     if (server.status === "off") {
       console.log("STARTING", data.server);
       server.status = "idle";
-      MCSERVER.stdin.write("java -Xmx4G -Xms4G -jar server.jar\n");
+      startServer();
     }
     // update all clients of the change
     io.emit("status", SERVERS);
@@ -62,7 +69,7 @@ io.on("connection", (socket) => {
     if (server.status === "on") {
       console.log("STOPPING", data.server);
       server.status = "turning_off";
-      MCSERVER.stdin.write("stop\n");
+      stopServer();
     }
     // update all clients of the change
     io.emit("status", SERVERS);
