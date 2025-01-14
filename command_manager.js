@@ -26,7 +26,7 @@ function createServerStatusChangeErrorEmbed(error) {
       .setDescription(`${error}`)
       .setAuthor({
         name: "Continuum Server Manager",
-        iconURL: "https://people.rit.edu/nam6711/manager.png",
+        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
   return embeds;
@@ -46,7 +46,7 @@ function createServerShutDownEmbed() {
       .setDescription(`The server is shutting down!`)
       .setAuthor({
         name: "Continuum Server Manager",
-        iconURL: "https://people.rit.edu/nam6711/manager.png",
+        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
   return embeds;
@@ -66,7 +66,7 @@ function createServerStartUpEmbed() {
       .setDescription(`The server is starting up!`)
       .setAuthor({
         name: "Continuum Server Manager",
-        iconURL: "https://people.rit.edu/nam6711/manager.png",
+        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
   return embeds;
@@ -82,7 +82,7 @@ function createServerStatusEmbed() {
       .setDescription(`The server is ${SERVERS.Continuum.status}`)
       .setAuthor({
         name: "Continuum Server Manager",
-        iconURL: "https://people.rit.edu/nam6711/manager.png",
+        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
   return embeds;

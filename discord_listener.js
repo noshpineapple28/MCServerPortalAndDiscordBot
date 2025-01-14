@@ -174,7 +174,7 @@ function buildStartupEmbed() {
     .setDescription(`The server is online`)
     .setAuthor({
       name: "Continuum Server Manager",
-      iconURL: "https://people.rit.edu/nam6711/icon.png",
+      iconURL: "https://people.rit.edu/nam6711/maintainance.png",
     })
 }
 
@@ -186,7 +186,7 @@ function buildStopEmbed() {
     .setDescription(`The server is offline`)
     .setAuthor({
       name: "Continuum Server Manager",
-      iconURL: "https://people.rit.edu/nam6711/icon.png",
+      iconURL: "https://people.rit.edu/nam6711/maintainance.png",
     })
 }
 
