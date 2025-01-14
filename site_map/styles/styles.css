@@ -1,0 +1,133 @@
+body {
+  background-color: rgb(75, 75, 75);
+}
+
+#controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2em;
+}
+
+/* button stylings */
+button {
+  color: black;
+  border: 0px;
+  cursor: pointer;
+  border-radius: 1em;
+  font-size: large;
+  width: 25vw;
+  height: 5vh;
+  font-family: "Courier New", monospace;
+}
+@media only screen and (max-width: 600px) {
+  h1 {
+    text-align: center;
+  }
+  button {
+    color: black;
+    border: 0px;
+    cursor: pointer;
+    border-radius: .5em;
+    font-size: large;
+    width: fit-content;
+    height: 2em;
+    font-family: "Courier New", monospace;
+  }
+}
+
+
+/* on */
+.off {
+  transition: 0.2s;
+  background-color: white;
+}
+.off:hover {
+  transition: 0.2s;
+  background-color: rgb(145, 224, 145);
+}
+.off:active {
+  transition: 0.2s;
+  background-color: rgb(91, 204, 91);
+}
+/* off */
+.on {
+  transition: 0.2s;
+  background-color: rgb(91, 204, 91);
+}
+.on:hover {
+  transition: 0.2s;
+  background-color: rgb(202, 96, 96);
+}
+.on:active {
+  transition: 0.2s;
+  background-color: rgb(168, 81, 81);
+}
+/* idle */
+.idle,
+.turning_off {
+  transition: 0.2s;
+  background-color: lightgray;
+}
+.idle,
+.turning_off:hover {
+  transition: 0.2s;
+  background-color: rgb(184, 184, 184);
+}
+.idle,
+.turning_off:active {
+  transition: 0.2s;
+  background-color: rgb(184, 184, 184);
+}
+
+/* header */
+h1 {
+  font-family: "Courier New", monospace;
+  color: white;
+}
+
+/* console */
+#console {
+  padding: 1em;
+  border-radius: 1em;
+  background-color: rgb(170, 170, 170);
+  height: 60vh;
+  overflow: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+}
+
+.ip {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.ip .start {
+  color: rgb(91, 204, 91);
+}
+
+#console p {
+  margin: 0;
+}
+
+.error {
+  color: red;
+}
+
+.exit {
+  color: yellow;
+}
+
+.start {
+  color: green;
+}
+
+/* message command area */
+#command {
+  margin-top: 1em;
+  width: 50vw;
+  resize: none;
+}

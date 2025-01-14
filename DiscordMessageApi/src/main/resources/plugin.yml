@@ -1,0 +1,4 @@
+name: DiscordMessageApi
+version: '1.0-SNAPSHOT'
+main: nam6711.continuum.discordMessageApi.DiscordMessageApi
+api-version: '1.21'
