@@ -16,6 +16,8 @@ window.onload = () => {
 
   // request the continuum server status
   SOCKET.emit("status", { server: "Continuum" });
+  // just in case, query seerver status in case it gets lost
+  setTimeout(() => SOCKET.emit("status", { server: "Continuum" }), 1000);
 };
 
 /**

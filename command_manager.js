@@ -16,7 +16,7 @@ const STATUS_COLORS = {
 };
 
 function createServerStatusChangeErrorEmbed(error) {
-  console.log("Server shut down command sent");
+  console.log("Server state change error command sent");
 
   const embeds = [];
   embeds.push(
@@ -26,7 +26,7 @@ function createServerStatusChangeErrorEmbed(error) {
       .setDescription(`${error}`)
       .setAuthor({
         name: "Continuum Server Manager",
-        iconURL: "https://people.rit.edu/nam6711/icon.png",
+        iconURL: "https://people.rit.edu/nam6711/manager.png",
       })
   );
   return embeds;
@@ -46,7 +46,7 @@ function createServerShutDownEmbed() {
       .setDescription(`The server is shutting down!`)
       .setAuthor({
         name: "Continuum Server Manager",
-        iconURL: "https://people.rit.edu/nam6711/icon.png",
+        iconURL: "https://people.rit.edu/nam6711/manager.png",
       })
   );
   return embeds;
@@ -54,7 +54,6 @@ function createServerShutDownEmbed() {
 
 function createServerStartUpEmbed() {
   console.log("Server start up command sent");
-  console.log(SERVERS.Continuum.status);
   if (SERVERS.Continuum.status !== "off") {
     return false;
   }
@@ -67,7 +66,7 @@ function createServerStartUpEmbed() {
       .setDescription(`The server is starting up!`)
       .setAuthor({
         name: "Continuum Server Manager",
-        iconURL: "https://people.rit.edu/nam6711/icon.png",
+        iconURL: "https://people.rit.edu/nam6711/manager.png",
       })
   );
   return embeds;
@@ -83,7 +82,7 @@ function createServerStatusEmbed() {
       .setDescription(`The server is ${SERVERS.Continuum.status}`)
       .setAuthor({
         name: "Continuum Server Manager",
-        iconURL: "https://people.rit.edu/nam6711/icon.png",
+        iconURL: "https://people.rit.edu/nam6711/manager.png",
       })
   );
   return embeds;
