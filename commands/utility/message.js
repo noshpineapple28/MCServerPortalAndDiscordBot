@@ -32,10 +32,10 @@ module.exports = {
   async execute(interaction) {
     const format = interaction.options.getString("format");
     const text = interaction.options.getString("text");
-    let sender = interaction.member.nickname;
-    console.log(interaction.user);
-    if (sender === null) sender = interaction.user.globalName;
-    if (sender === null) sender = interaction.user.username;
+    let sender =
+      interaction.member.nickname ??
+      interaction.user.globalName ??
+      interaction.user.username;
     let embeds = createServerMessageEmbed(format);
     // if not an error from server status, then start the server!
     if (embeds) {
