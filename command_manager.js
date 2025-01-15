@@ -13,6 +13,7 @@ const STATUS_COLORS = {
   off: 0xffffff,
   idle: 0xd3d3d3,
   turning_off: 0xd3d3d3,
+  message: 0x31a4d4,
 };
 
 function createServerStatusChangeErrorEmbed(error) {
@@ -88,10 +89,30 @@ function createServerStatusEmbed() {
   return embeds;
 }
 
+function createServerMessageEmbed(format) {
+  console.log("Server message command sent");
+  if (SERVERS.Continuum.status !== "on")
+    return false;
+
+  const embeds = [];
+  embeds.push(
+    new EmbedBuilder()
+      .setColor(0x31a4d4)
+      .setTitle(`Continuum IMS`)
+      .setDescription(`A ${format} message was sent!`)
+      .setAuthor({
+        name: "Continuum IMS",
+        iconURL: "https://people.rit.edu/nam6711/icon.png",
+      })
+  );
+  return embeds;
+}
+
 module.exports = {
   initializeCommands,
   createServerStatusEmbed,
   createServerShutDownEmbed,
   createServerStartUpEmbed,
   createServerStatusChangeErrorEmbed,
+  createServerMessageEmbed,
 };

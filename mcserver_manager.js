@@ -42,6 +42,23 @@ MCSERVER.on("exit", (code) => {
 });
 
 /**
+ * responsible for the send message discord command
+ */
+function sendMessage(format, text, sender) {
+  switch (format) {
+    case "chat": {
+      MCSERVER.stdin.write(`say <${sender}> ${text}\n`)
+      break;
+    }
+    case "title": {
+      MCSERVER.stdin.write(`title @a subtitle { "text": "from: ${sender}", "italic": true }\n`)
+      MCSERVER.stdin.write(`title @a title { "text": "${text}"}\n`)
+      break;
+    }
+  }
+}
+
+/**
  * stdout handlers
  * reads from the console output and handles what to do from there
  */
@@ -104,4 +121,4 @@ function startServerManager(socketIOConnection, discordHandler, serverData) {
 }
 
 // exports
-module.exports = { startServerManager, startServer, stopServer };
+module.exports = { startServerManager, startServer, stopServer, sendMessage };
