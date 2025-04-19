@@ -6,6 +6,7 @@ const {
   Events,
   GatewayIntentBits,
   ActivityType,
+  TextChannel,
 } = require("discord.js");
 // values needed for starting the bot
 const { token } = require("./config.json");
@@ -73,10 +74,10 @@ function startClient() {
       const channels = client.guilds.cache.get(guild).channels.cache;
       // go through all channels in a guild and save the one labeled continuum
       for (let channel of channels) {
-        if (channel[1].name === "continuum") {
+        if (channel[1].name === "continuum" && channel[1] instanceof TextChannel) {
           CHANNEL_IDS.push(channel[1].id);
         }
-        if (channel[1].name === "continuum-chat") {
+        if (channel[1].name === "continuum-chat" && channel[1] instanceof TextChannel) {
           CHANNEL_CHAT_IDS.push(channel[1].id);
         }
       }
