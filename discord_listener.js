@@ -15,6 +15,7 @@ let client;
 
 // ids of discord channels we will be sending to
 const CHANNEL_IDS = [];
+const CHANNEL_CHAT_IDS = [];
 
 // used for the side pannel colors of embeds
 const ALERT_TYPES = {
@@ -74,6 +75,9 @@ function startClient() {
       for (let channel of channels) {
         if (channel[1].name === "continuum") {
           CHANNEL_IDS.push(channel[1].id);
+        }
+        if (channel[1].name === "continuum-chat") {
+          CHANNEL_CHAT_IDS.push(channel[1].id);
         }
       }
     }
@@ -157,12 +161,22 @@ function parseEvent(event) {
     }
   }
 
-  // send the embeds to every channel
-  for (const CHANNEL_ID of CHANNEL_IDS) {
-    const channel = client.channels.cache.get(CHANNEL_ID);
-    channel.send({
-      embeds: embeds,
-    });
+  // send chat messages to the chat channel
+  if (event_details[1] === "MESSAGE") {
+    for (const CHAT_ID of CHANNEL_CHAT_IDS) {
+      const channel = client.channels.cache.get(CHAT_ID);
+      channel.send({
+        embeds: embeds,
+      });
+    }
+  } else {
+    // send the embeds to every channel
+    for (const CHANNEL_ID of CHANNEL_IDS) {
+      const channel = client.channels.cache.get(CHANNEL_ID);
+      channel.send({
+        embeds: embeds,
+      });
+    }
   }
 }
 
@@ -175,7 +189,7 @@ function buildStartupEmbed() {
     .setAuthor({
       name: "Continuum Server Manager",
       iconURL: "https://people.rit.edu/nam6711/maintainance.png",
-    })
+    });
 }
 
 function buildStopEmbed() {
@@ -187,7 +201,7 @@ function buildStopEmbed() {
     .setAuthor({
       name: "Continuum Server Manager",
       iconURL: "https://people.rit.edu/nam6711/maintainance.png",
-    })
+    });
 }
 
 /**
