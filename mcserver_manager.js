@@ -88,6 +88,8 @@ MCSERVER.stdout.on("data", (data) => {
 
   // turn off server event
   if (STR.includes("DISCORDCONTINUUM;Ended!")) {
+    // clear players list just in case it breaks
+    PLAYERS.splice(0, PLAYERS.length);
     io.emit("console_exit", "Server Closed");
     // alert users that the server turned off
     SERVER.status = "off";
