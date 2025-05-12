@@ -106,7 +106,8 @@ MCSERVER.stdout.on("data", (data) => {
   // server start
   else if (STR.includes("Enabling DiscordMessageApi")) {
     io.emit("console_message", STR);
-    io.emit("console_server_start", "67.20.244.249:25565");
+    // set to ur ip
+    io.emit("console_server_start", "--.--.---.---:25565");
     // alert users that the server has properly turned on
     SERVERS["Continuum"].status = "on";
     // sends a discord message
