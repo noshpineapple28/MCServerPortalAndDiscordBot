@@ -1,10 +1,10 @@
 const { EmbedBuilder } = require("discord.js");
 // the status of the server
-let SERVERS;
+let SERVER;
 
 function initializeCommands(servers) {
   // copy servers over
-  SERVERS = servers;
+  SERVER = servers;
 }
 
 // server status colors
@@ -23,10 +23,10 @@ function createServerStatusChangeErrorEmbed(error) {
   embeds.push(
     new EmbedBuilder()
       .setColor(0)
-      .setTitle(`Continuum Server Status`)
+      .setTitle(`${SERVER.name} Server Status`)
       .setDescription(`${error}`)
       .setAuthor({
-        name: "Continuum Server Manager",
+        name: `${SERVER.name} Server Manager`,
         iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
@@ -35,7 +35,7 @@ function createServerStatusChangeErrorEmbed(error) {
 
 function createServerShutDownEmbed() {
   console.log("Server shut down command sent");
-  if (SERVERS.Continuum.status !== "on") {
+  if (SERVER.status !== "on") {
     return false;
   }
 
@@ -43,10 +43,10 @@ function createServerShutDownEmbed() {
   embeds.push(
     new EmbedBuilder()
       .setColor(STATUS_COLORS["off"])
-      .setTitle(`Continuum Server Status`)
+      .setTitle(`${SERVER.name} Server Status`)
       .setDescription(`The server is shutting down!`)
       .setAuthor({
-        name: "Continuum Server Manager",
+        name: `${SERVER.name} Server Manager`,
         iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
@@ -55,7 +55,7 @@ function createServerShutDownEmbed() {
 
 function createServerStartUpEmbed() {
   console.log("Server start up command sent");
-  if (SERVERS.Continuum.status !== "off") {
+  if (SERVER.status !== "off") {
     return false;
   }
 
@@ -63,10 +63,10 @@ function createServerStartUpEmbed() {
   embeds.push(
     new EmbedBuilder()
       .setColor(STATUS_COLORS["on"])
-      .setTitle(`Continuum Server Status`)
+      .setTitle(`${SERVER.name} Server Status`)
       .setDescription(`The server is starting up!`)
       .setAuthor({
-        name: "Continuum Server Manager",
+        name: `${SERVER.name} Server Manager`,
         iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
@@ -78,11 +78,11 @@ function createServerStatusEmbed() {
   const embeds = [];
   embeds.push(
     new EmbedBuilder()
-      .setColor(STATUS_COLORS[SERVERS.Continuum.status])
-      .setTitle(`Continuum Server Status`)
-      .setDescription(`The server is ${SERVERS.Continuum.status}`)
+      .setColor(STATUS_COLORS[SERVER.status])
+      .setTitle(`${SERVER.name} Server Status`)
+      .setDescription(`The server is ${SERVER.status}`)
       .setAuthor({
-        name: "Continuum Server Manager",
+        name: `${SERVER.name} Server Manager`,
         iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
@@ -92,17 +92,17 @@ function createServerStatusEmbed() {
 function createServerWhitelistEmbed(username) {
   console.log("Server status command sent");
   const embeds = [];
-  if (SERVERS.Continuum.status !== "on") {
+  if (SERVER.status !== "on") {
     return false;
   }
 
   embeds.push(
     new EmbedBuilder()
       .setColor(STATUS_COLORS["idle"])
-      .setTitle(`Continuum Server Status`)
+      .setTitle(`${SERVER.name} Server Status`)
       .setDescription(`${username} has been whitelisted to the server`)
       .setAuthor({
-        name: "Continuum Server Manager",
+        name: `${SERVER.name} Server Manager`,
         iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
@@ -112,7 +112,7 @@ function createServerWhitelistEmbed(username) {
 function buildListEmbed(total, players) {
   console.log("Server status command sent");
   const embeds = [];
-  if (SERVERS.Continuum.status !== "on") {
+  if (SERVER.status !== "on") {
     return false;
   }
 
@@ -122,7 +122,7 @@ function buildListEmbed(total, players) {
       .setTitle(total)
       .setDescription(players)
       .setAuthor({
-        name: "Continuum Server Manager",
+        name: `${SERVER.name} Server Manager`,
         iconURL: "https://people.rit.edu/nam6711/maintainance.png",
       })
   );
@@ -131,16 +131,16 @@ function buildListEmbed(total, players) {
 
 function createServerMessageEmbed(format) {
   console.log("Server message command sent");
-  if (SERVERS.Continuum.status !== "on") return false;
+  if (SERVER.status !== "on") return false;
 
   const embeds = [];
   embeds.push(
     new EmbedBuilder()
       .setColor(0x31a4d4)
-      .setTitle(`Continuum IMS`)
+      .setTitle(`${SERVER.name} IMS`)
       .setDescription(`A ${format} message was sent!`)
       .setAuthor({
-        name: "Continuum IMS",
+        name: `${SERVER.name} IMS`,
         iconURL: "https://people.rit.edu/nam6711/icon.png",
       })
   );

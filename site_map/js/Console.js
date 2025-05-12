@@ -3,7 +3,8 @@
 const SOCKET = io();
 // the animation for ... will generate a key to stop it, saved here
 //    if 0, then no animation is playing
-let stopKeyContinuum = 0;
+let stopKeyServerTitle = 0;
+let server_name = "";
 
 /**
  * loads event listeners to the site map, and requests the server status from
@@ -11,10 +12,10 @@ let stopKeyContinuum = 0;
  */
 window.onload = () => {
   document
-    .querySelector("#Continuum")
-    .addEventListener("click", () => serverStateChange("Continuum"));
+    .querySelector("#ServerTitle")
+    .addEventListener("click", () => serverStateChange(server_name));
 
-  // request the continuum server status
+  // request the stopKeyServerTitle server status
   SOCKET.emit("status");
 };
 
@@ -23,7 +24,7 @@ window.onload = () => {
  * @param {String} server the server being interacted with
  */
 function serverStateChange(server) {
-  const button = document.querySelector(`#${server}`);
+  const button = document.querySelector(`#ServerTitle`);
   if (button.className === "off") {
     SOCKET.emit("start_server");
   } else if (button.className == "on") {
@@ -39,47 +40,52 @@ function serverStateChange(server) {
  * @param {String} status the status of the server
  */
 function setServerStatus(server, status, ip) {
-  const SERVERBUTTON = document.querySelector(`#${server}`);
+  const SERVERBUTTON = document.querySelector(`#ServerTitle`);
   SERVERBUTTON.className = status;
 
-  if (status === "idle") {
+  if ((status === "idle" || status === "starting") && !stopKeyServerTitle) {
     SERVERBUTTON.innerHTML = `Starting ${server} Server`;
     // ... animation
-    stopKeyContinuum = setInterval(() => {
+    stopKeyServerTitle = setInterval(() => {
       // add dots
       let text = SERVERBUTTON.innerHTML;
       if (text[text.length - 3] !== ".") SERVERBUTTON.innerHTML += ".";
       else SERVERBUTTON.innerHTML = `Starting ${server} Server`;
     }, 500);
     // send ws command to turn on server
-  } else if (status === "turning_off") {
+  } else if (status === "turning_off" && !stopKeyServerTitle) {
     SERVERBUTTON.innerHTML = `Turning off ${server} Server`;
     // ... animation
-    stopKeyContinuum = setInterval(() => {
+    stopKeyServerTitle = setInterval(() => {
       // add dots
       let text = SERVERBUTTON.innerHTML;
       if (text[text.length - 3] !== ".") SERVERBUTTON.innerHTML += ".";
       else SERVERBUTTON.innerHTML = `Turning off ${server} Server`;
     }, 500);
     // send ws command to turn on server
-  } else {
+  } else if (
+    status !== "idle" &&
+    status !== "starting" &&
+    status !== "turning_off"
+  ) {
     // if there is an animation going, stop it
-    if (stopKeyContinuum) clearInterval(stopKeyContinuum);
-    stopKeyContinuum = 0;
+    if (stopKeyServerTitle) clearInterval(stopKeyServerTitle);
+    stopKeyServerTitle = 0;
     // set the state of the button to say the server is whatever status it changed to
     SERVERBUTTON.innerHTML = `${server} Server ${status}`;
   }
 
   // update the server ip if it changed
-  document.querySelector(`#${server}Ip #ip`).innerHTML = ip;
+  document.querySelector(`#ServerIp #ip`).innerHTML = ip;
 }
 
 /**
  * the status event will update the sites look to reflect the sent server status
  */
 SOCKET.on("status", (data) => {
-  document.querySelector("#Continuum").className = data["status"];
-  setServerStatus("Continuum", data["status"], data["ip"]);
+  document.querySelector("#ServerTitle").className = data["status"];
+  server_name = data["name"];
+  setServerStatus(server_name, data["status"], data["ip"]);
 });
 
 /**

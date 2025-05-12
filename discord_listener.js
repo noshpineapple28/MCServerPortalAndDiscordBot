@@ -13,6 +13,7 @@ const { token } = require("./config.json");
 const { EmbedBuilder } = require("@discordjs/builders");
 // client!
 let client;
+let SERVER;
 
 // ids of discord channels we will be sending to
 const CHANNEL_IDS = [];
@@ -24,6 +25,11 @@ const ALERT_TYPES = {
   message: 0x31a4d4,
   death: 0x702a2a,
 };
+
+function initializeListener(servers) {
+  // copy servers over
+  SERVER = servers;
+}
 
 /**
  * starts the discord bot client to allow it to respond and react
@@ -72,12 +78,12 @@ function startClient() {
     // for every guild we're in
     for (let guild of Guilds) {
       const channels = client.guilds.cache.get(guild).channels.cache;
-      // go through all channels in a guild and save the one labeled continuum
+      // go through all channels in a guild and save the one labeled
       for (let channel of channels) {
-        if (channel[1].name === "continuum" && channel[1] instanceof TextChannel) {
+        if (channel[1].name === SERVER.name.toLowerCase() && channel[1] instanceof TextChannel) {
           CHANNEL_IDS.push(channel[1].id);
         }
-        if (channel[1].name === "continuum-chat" && channel[1] instanceof TextChannel) {
+        if (channel[1].name === `${SERVER.name.toLowerCase()}-chat` && channel[1] instanceof TextChannel) {
           CHANNEL_CHAT_IDS.push(channel[1].id);
         }
       }
@@ -156,10 +162,6 @@ function parseEvent(event) {
       embeds.push(buildStopEmbed());
       break;
     }
-    case "LIST": {
-      embeds.push(buildListEmbed(event_details[2]));
-      break;
-    }
     default: {
       console.log("Non Embed event: ", event);
       return;
@@ -189,10 +191,10 @@ function buildStartupEmbed() {
   console.log("Startup message sent");
   return new EmbedBuilder()
     .setColor(0x5bcc5b)
-    .setTitle("Continuum Server Status")
+    .setTitle(`${SERVER.name} Server Status`)
     .setDescription(`The server is online`)
     .setAuthor({
-      name: "Continuum Server Manager",
+      name: `${SERVER.name} Server Manager`,
       iconURL: "https://people.rit.edu/nam6711/maintainance.png",
     });
 }
@@ -201,10 +203,10 @@ function buildStopEmbed() {
   console.log("Stop message sent");
   return new EmbedBuilder()
     .setColor(0xffffff)
-    .setTitle("Continuum Server Status")
+    .setTitle(`${SERVER.name} Server Status`)
     .setDescription(`The server is offline`)
     .setAuthor({
-      name: "Continuum Server Manager",
+      name: `${SERVER.name} Server Manager`,
       iconURL: "https://people.rit.edu/nam6711/maintainance.png",
     });
 }
@@ -227,7 +229,7 @@ function buildAdvancementEmbed(player, advancement, requirements) {
     .setTitle("Advancement Get!")
     .setDescription(`${player} has made the advancement **[${advancement}]**`)
     .setAuthor({
-      name: "Continuum News Flash",
+      name: `${SERVER.name} News Flash`,
       iconURL: "https://people.rit.edu/nam6711/news.png",
     })
     .addFields({ name: `${advancement}`, value: `${requirements}` });
@@ -246,7 +248,7 @@ function buildMessageEmbed(player, message) {
     .setTitle("Chat Message")
     .setDescription(`<${player}> ${message}`)
     .setAuthor({
-      name: "Continuum IMS",
+      name: `${SERVER.name} IMS`,
       iconURL: "https://people.rit.edu/nam6711/icon.png",
     });
 }
@@ -267,10 +269,10 @@ function buildDeathEmbed(player, message) {
     .setTitle(`${player} has died`)
     .setDescription(`${message}`)
     .setAuthor({
-      name: "Continuum Obituary System",
+      name: `${SERVER.name} Obituary System`,
       iconURL: "https://people.rit.edu/nam6711/death.png",
     });
 }
 
 // exports
-module.exports = { startClient, parseEvent };
+module.exports = { initializeListener, startClient, parseEvent };

@@ -40,8 +40,5 @@ The server is typically located on port `25565`.
 
 ## Limitations
 
-- I am working to make this more abstracted, currently, it is hard-coded in many places to work specifically with my program
-- Due to a plan I had to allow the web portal to host multiple consoles and potentially even run commands, it has some code bloat
-- Server name is strictly Continuum, working to edit that
 - You will need to provide a config file of your own with desired token for discord bot, as well as manually approve each discord server you wish to allow the commands for using `register_commands.js`
   - Once I have done a better job abstracting all this, these limitations will be removed

@@ -1,5 +1,6 @@
 {
     "token": "<bot_token>",
     "mc_server_port": "25565",
+    "server_name": "<SERVER_NAME>",
     "guildId": "<guild_id>"
 }
