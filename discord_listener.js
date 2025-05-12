@@ -156,6 +156,10 @@ function parseEvent(event) {
       embeds.push(buildStopEmbed());
       break;
     }
+    case "LIST": {
+      embeds.push(buildListEmbed(event_details[2]));
+      break;
+    }
     default: {
       console.log("Non Embed event: ", event);
       return;

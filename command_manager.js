@@ -89,10 +89,49 @@ function createServerStatusEmbed() {
   return embeds;
 }
 
+function createServerWhitelistEmbed(username) {
+  console.log("Server status command sent");
+  const embeds = [];
+  if (SERVERS.Continuum.status !== "on") {
+    return false;
+  }
+
+  embeds.push(
+    new EmbedBuilder()
+      .setColor(STATUS_COLORS["idle"])
+      .setTitle(`Continuum Server Status`)
+      .setDescription(`${username} has been whitelisted to the server`)
+      .setAuthor({
+        name: "Continuum Server Manager",
+        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
+      })
+  );
+  return embeds;
+}
+
+function buildListEmbed(total, players) {
+  console.log("Server status command sent");
+  const embeds = [];
+  if (SERVERS.Continuum.status !== "on") {
+    return false;
+  }
+
+  embeds.push(
+    new EmbedBuilder()
+      .setColor(STATUS_COLORS["idle"])
+      .setTitle(total)
+      .setDescription(players)
+      .setAuthor({
+        name: "Continuum Server Manager",
+        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
+      })
+  );
+  return embeds;
+}
+
 function createServerMessageEmbed(format) {
   console.log("Server message command sent");
-  if (SERVERS.Continuum.status !== "on")
-    return false;
+  if (SERVERS.Continuum.status !== "on") return false;
 
   const embeds = [];
   embeds.push(
@@ -115,4 +154,6 @@ module.exports = {
   createServerStartUpEmbed,
   createServerStatusChangeErrorEmbed,
   createServerMessageEmbed,
+  createServerWhitelistEmbed,
+  buildListEmbed,
 };

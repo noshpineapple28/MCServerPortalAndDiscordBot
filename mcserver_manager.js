@@ -6,6 +6,8 @@ let parseEvent;
 const MCSERVER = spawn(`cmd`, [`/k "cd ../"`], {
   shell: true,
 });
+// players
+const PLAYERS = [];
 // server states
 let SERVERS;
 // pointer to the io server
@@ -47,15 +49,34 @@ MCSERVER.on("exit", (code) => {
 function sendMessage(format, text, sender) {
   switch (format) {
     case "chat": {
-      MCSERVER.stdin.write(`say <${sender}> ${text}\n`)
+      MCSERVER.stdin.write(`say <${sender}> ${text}\n`);
       break;
     }
     case "title": {
-      MCSERVER.stdin.write(`title @a subtitle { "text": "from: ${sender}", "italic": true }\n`)
-      MCSERVER.stdin.write(`title @a title { "text": "${text}"}\n`)
+      MCSERVER.stdin.write(
+        `title @a subtitle { "text": "from: ${sender}", "italic": true }\n`
+      );
+      MCSERVER.stdin.write(`title @a title { "text": "${text}"}\n`);
       break;
     }
   }
+}
+
+/**
+ * responsible for the whitelist command
+ */
+function whitelist(username) {
+  MCSERVER.stdin.write(`whitelist add ${username}\n`);
+}
+
+/**
+ * responsible for the whitelist command
+ */
+function query_players() {
+  let total = `A total of ${PLAYERS.length} out of the max 6 are online.`;
+  let text = "The following are online: ";
+  PLAYERS.forEach((name) => (text += `\`${name}\` `));
+  return [total, text];
 }
 
 /**
@@ -102,6 +123,13 @@ MCSERVER.stdout.on("data", (data) => {
   }
   // start of command prompt
   else if (STR.includes(`C:\\Users\\manou\\OneDrive\\Documents\\mcserver>`)) {
+  } else if (STR.includes(`joined the game`)) {
+    let name = STR.split(": ")[1].split(" ")[0];
+    PLAYERS.push(name);
+  } else if (STR.includes(`left the game`)) {
+    let name = STR.split(": ")[1].split(" ")[0];
+    let index = PLAYERS.indexOf(name);
+    PLAYERS.splice(index, 1);
   } else {
     io.emit("console_message", data.toString());
   }
@@ -121,4 +149,11 @@ function startServerManager(socketIOConnection, discordHandler, serverData) {
 }
 
 // exports
-module.exports = { startServerManager, startServer, stopServer, sendMessage };
+module.exports = {
+  startServerManager,
+  startServer,
+  stopServer,
+  sendMessage,
+  whitelist,
+  query_players,
+};
