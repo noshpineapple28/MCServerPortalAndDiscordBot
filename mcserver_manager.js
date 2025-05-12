@@ -9,7 +9,7 @@ const MCSERVER = spawn(`cmd`, [`/k "cd ../"`], {
 // players
 const PLAYERS = [];
 // server states
-let SERVERS;
+let SERVER;
 // pointer to the io server
 let io;
 
@@ -18,8 +18,8 @@ let io;
  */
 function startServer() {
   MCSERVER.stdin.write("java -Xmx4G -Xms4G -jar server.jar\n");
-  SERVERS["Continuum"].status = "idle";
-  io.emit("status", SERVERS);
+  SERVER.status = "idle";
+  io.emit("status", SERVER);
 }
 
 /**
@@ -27,8 +27,8 @@ function startServer() {
  */
 function stopServer() {
   MCSERVER.stdin.write("stop\n");
-  SERVERS["Continuum"].status = "turning_off";
-  io.emit("status", SERVERS);
+  SERVER.status = "turning_off";
+  io.emit("status", SERVER);
 }
 
 /**
@@ -90,8 +90,8 @@ MCSERVER.stdout.on("data", (data) => {
   if (STR.includes("DISCORDCONTINUUM;Ended!")) {
     io.emit("console_exit", "Server Closed");
     // alert users that the server turned off
-    SERVERS["Continuum"].status = "off";
-    io.emit("status", SERVERS);
+    SERVER.status = "off";
+    io.emit("status", SERVER);
     // sends a discord message
     parseEvent("EVENT;STOP");
   }
@@ -107,19 +107,19 @@ MCSERVER.stdout.on("data", (data) => {
   else if (STR.includes("Enabling DiscordMessageApi")) {
     io.emit("console_message", STR);
     // set to ur ip
-    io.emit("console_server_start", "--.--.---.---:25565");
+    io.emit("console_server_start", "67.20.244.249:25565");
     // alert users that the server has properly turned on
-    SERVERS["Continuum"].status = "on";
+    SERVER.status = "on";
     // sends a discord message
     parseEvent("EVENT;START");
-    io.emit("status", SERVERS);
+    io.emit("status", SERVER);
   }
   // server pause, turn it off
   else if (STR.includes("Server empty for 60 seconds, pausing")) {
     io.emit("console_message", STR);
     io.emit("console_exit", "Nobody online, turning off");
-    SERVERS["Continuum"].status = "turning_off";
-    io.emit("status", SERVERS);
+    SERVER.status = "turning_off";
+    io.emit("status", SERVER);
     MCSERVER.stdin.write("stop\n");
   }
   // start of command prompt
@@ -145,7 +145,7 @@ MCSERVER.stdout.on("data", (data) => {
 function startServerManager(socketIOConnection, discordHandler, serverData) {
   io = socketIOConnection;
   parseEvent = discordHandler;
-  SERVERS = serverData;
+  SERVER = serverData;
   return MCSERVER;
 }
 

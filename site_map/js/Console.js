@@ -15,7 +15,7 @@ window.onload = () => {
     .addEventListener("click", () => serverStateChange("Continuum"));
 
   // request the continuum server status
-  SOCKET.emit("status", { server: "Continuum" });
+  SOCKET.emit("status");
 };
 
 /**
@@ -25,14 +25,10 @@ window.onload = () => {
 function serverStateChange(server) {
   const button = document.querySelector(`#${server}`);
   if (button.className === "off") {
-    SOCKET.emit("start_server", {
-      server: server,
-    });
+    SOCKET.emit("start_server");
   } else if (button.className == "on") {
     // turn off
-    SOCKET.emit("stop_server", {
-      server: server,
-    });
+    SOCKET.emit("stop_server");
   }
 }
 
@@ -82,8 +78,8 @@ function setServerStatus(server, status, ip) {
  * the status event will update the sites look to reflect the sent server status
  */
 SOCKET.on("status", (data) => {
-  document.querySelector("#Continuum").className = data["Continuum"].status;
-  setServerStatus("Continuum", data["Continuum"].status, data["Continuum"].ip);
+  document.querySelector("#Continuum").className = data["status"];
+  setServerStatus("Continuum", data["status"], data["ip"]);
 });
 
 /**

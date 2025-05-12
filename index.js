@@ -6,32 +6,46 @@ const {
   stopServer,
 } = require("./mcserver_manager");
 const { initializeCommands } = require("./command_manager");
-const { server_ip } = require("./config.json");
 const socketIO = require("socket.io");
+const { mc_server_port } = require("./config.json")
 const http = require("http");
 const app = express();
 const PORT = 3000;
+let SERVER_IP = "";
 
-// servers
+// server
 const server = http.createServer(app);
 const io = socketIO(server);
 // mcserver states
-const SERVERS = {
-  // name is the same as the websites id for the related console and buttons
-  Continuum: {
-    status: "off",
-    ip: server_ip,
-  },
+const MC_SERVER_INFO = {
+  status: "off",
+  ip: SERVER_IP,
 };
 
 // start discord client
-initializeCommands(SERVERS);
+initializeCommands(MC_SERVER_INFO);
 startClient();
 // start minecraft server manager
-const MCSERVER = startServerManager(io, parseEvent, SERVERS);
+const MCSERVER = startServerManager(io, parseEvent, MC_SERVER_INFO);
 
 // whenever the "/" endpoint appears, allow server to serve all files in the site_map folder
 app.use("/", express.static("site_map"));
+
+/**
+ * grabs ip
+ */
+async function getIp() {
+  try {
+    const response = await fetch("https://api.ipify.org?format=json");
+    const data = await response.json();
+    console.log(`Your IP Address: ${data.ip}`);
+    SERVER_IP = data.ip;
+    MC_SERVER_INFO.ip = `${data.ip}:${mc_server_port}`;
+  } catch (error) {
+    console.error("Error fetching IP address:", error);
+    return "ERROR SERVER IP NOT AVAILABLE";
+  }
+}
 
 /**
  * sets up the socket.io connection endpoints
@@ -42,43 +56,42 @@ io.on("connection", (socket) => {
    * when the client requests the server status, respond
    */
   socket.on("status", () => {
-    socket.emit("status", SERVERS);
+    socket.emit("status", MC_SERVER_INFO);
   });
 
   /**
    * runs when the client requests to start the server
    * @param data the name of the server we wish to start
    */
-  socket.on("start_server", (data) => {
-    let server = SERVERS[data.server];
-    if (server.status === "off") {
-      console.log("STARTING", data.server);
-      server.status = "idle";
+  socket.on("start_server", () => {
+    if (MC_SERVER_INFO.status === "off") {
+      console.log("STARTING");
+      MC_SERVER_INFO.status = "idle";
       startServer();
     }
     // update all clients of the change
-    io.emit("status", SERVERS);
+    io.emit("status", MC_SERVER_INFO);
   });
 
   /**
    * runs when the client requests to stop the server
    * @param data the name of the server we wish to stop
    */
-  socket.on("stop_server", (data) => {
-    let server = SERVERS[data.server];
-    if (server.status === "on") {
-      console.log("STOPPING", data.server);
-      server.status = "turning_off";
+  socket.on("stop_server", () => {
+    if (MC_SERVER_INFO.status === "on") {
+      console.log("STOPPING");
+      MC_SERVER_INFO.status = "turning_off";
       stopServer();
     }
     // update all clients of the change
-    io.emit("status", SERVERS);
+    io.emit("status", MC_SERVER_INFO);
   });
 });
 
 // startup
+getIp();
 server.listen(PORT);
-console.log("Server started on", server_ip);
+console.log("Server started on", SERVER_IP);
 console.log("Server started on", `http://localhost:${PORT}`);
 
 // on close
