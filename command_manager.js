@@ -1,4 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
+const fs = require("fs");
+const WHITELISTED_USERS = require("../whitelist.json");
+const LINKED_USERS = require("./linked_users.json");
 // the status of the server
 let SERVER;
 
@@ -109,6 +112,48 @@ function createServerWhitelistEmbed(username) {
   return embeds;
 }
 
+function createServerLinkEmbed(username, discord_user, discord_user_id) {
+  console.log("Server status command sent");
+  const embeds = [];
+
+  // check to see if that user exists
+  let user_exists = false;
+  WHITELISTED_USERS.forEach((user) => {
+    if (username === user.name) user_exists = true;
+  });
+  if (!user_exists) {
+    return false;
+  }
+
+  // link discord user to minecraft user
+  LINKED_USERS[username] = {
+    discord_user: discord_user_id,
+    inventory: [],
+  };
+  // save the json file
+  fs.writeFileSync(
+    "./linked_users.json",
+    JSON.stringify(LINKED_USERS),
+    (err) => {
+      if (err) return console.log(err);
+      console.log(JSON.stringify(file));
+      console.log("writing to " + fileName);
+    }
+  );
+
+  embeds.push(
+    new EmbedBuilder()
+      .setColor(STATUS_COLORS["idle"])
+      .setTitle(`${SERVER.name} Server Status`)
+      .setDescription(`${username} has been linked to ${discord_user}`)
+      .setAuthor({
+        name: `${SERVER.name} Server Manager`,
+        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
+      })
+  );
+  return embeds;
+}
+
 function buildListEmbed(total, players) {
   console.log("Server status command sent");
   const embeds = [];
@@ -156,4 +201,5 @@ module.exports = {
   createServerMessageEmbed,
   createServerWhitelistEmbed,
   buildListEmbed,
+  createServerLinkEmbed,
 };
