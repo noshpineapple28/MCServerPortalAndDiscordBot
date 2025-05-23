@@ -126,7 +126,7 @@ MCSERVER.stdout.on("data", (data) => {
     MCSERVER.stdin.write("stop\n");
   }
   // start of command prompt
-  else if (STR.includes(`C:\\Users\\manou\\OneDrive\\Documents\\mcserver>`)) {
+  else if (STR.includes(`:\\`)) {
   } else if (STR.includes(`joined the game`)) {
     let name = STR.split(": ")[1].split(" ")[0];
     PLAYERS.push(name);

@@ -19,6 +19,7 @@ module.exports = {
       interaction.member.nickname ??
       interaction.user.globalName ??
       interaction.user.username;
+    // this also links the user
     let embeds = createServerLinkEmbed(username, sender, interaction.user.id);
     // if not an error from server status, then start the server!
     if (!embeds) {

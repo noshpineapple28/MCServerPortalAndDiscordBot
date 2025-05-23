@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
+const { process_wager, process_wager_listing } = require("./gambits/gambit");
 const LINKED_USERS = require("./linked_users.json");
 // the status of the server
 let SERVER;
@@ -126,10 +127,15 @@ function createServerLinkEmbed(username, discord_user, discord_user_id) {
   }
 
   // link discord user to minecraft user
-  LINKED_USERS[username] = {
-    discord_user: discord_user_id,
-    inventory: [],
-  };
+  if (LINKED_USERS[username])
+    LINKED_USERS[username].discord_user = discord_user_id;
+  else
+    LINKED_USERS[username] = {
+      discord_user: discord_user_id,
+      inventory: {
+        tokens: 10,
+      },
+    };
   // save the json file
   fs.writeFileSync(
     "./linked_users.json",
@@ -192,6 +198,20 @@ function createServerMessageEmbed(format) {
   return embeds;
 }
 
+function createServerGambitEmbed(discord_user_id, tokens, prediction) {
+  console.log("Server gambit wager command sent");
+
+  const embeds = process_wager(discord_user_id, tokens, prediction);
+  return embeds;
+}
+
+function createServerGambitListWagersEmbed(discord_user_id) {
+  console.log("Server gambit list wagers command sent");
+
+  const embeds = process_wager_listing(discord_user_id);
+  return embeds;
+}
+
 module.exports = {
   initializeCommands,
   createServerStatusEmbed,
@@ -200,6 +220,8 @@ module.exports = {
   createServerStatusChangeErrorEmbed,
   createServerMessageEmbed,
   createServerWhitelistEmbed,
+  createServerGambitEmbed,
+  createServerGambitListWagersEmbed,
   buildListEmbed,
   createServerLinkEmbed,
 };

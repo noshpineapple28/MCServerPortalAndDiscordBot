@@ -7,10 +7,17 @@ const {
   GatewayIntentBits,
   ActivityType,
   TextChannel,
+  MessageFlags,
 } = require("discord.js");
 // values needed for starting the bot
 const { token } = require("./config.json");
 const { EmbedBuilder } = require("@discordjs/builders");
+const {
+  create_gambit,
+  change_gambit_win_condition,
+} = require("./gambits/gambit");
+const { link_helper } = require("./helpers/embeds");
+const { SomeoneDiesGambit } = require("./gambits/SomeoneDiesGambit");
 // client!
 let client;
 let SERVER;
@@ -75,6 +82,7 @@ function startClient() {
   // after bot is readied, gather channels we will post to
   client.on("ready", () => {
     client.user.setStatus("idle");
+
     const Guilds = client.guilds.cache.map((guild) => guild.id);
     // for every guild we're in
     for (let guild of Guilds) {
@@ -95,6 +103,11 @@ function startClient() {
         }
       }
     }
+
+    // initiate helper method links
+    link_helper(client, CHANNEL_IDS);
+    // handle gamble MUST HAPPEN AFTER HELPER IS COMPLETE
+    create_gambit();
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
@@ -159,6 +172,7 @@ function parseEvent(event) {
     // death message embed
     case "DEATH": {
       embeds.push(buildDeathEmbed(event_details[2], event_details[3]));
+      change_gambit_win_condition(SomeoneDiesGambit, "yes", true);
       break;
     }
     case "START": {
