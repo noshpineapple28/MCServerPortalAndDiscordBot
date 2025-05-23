@@ -51,8 +51,8 @@ function create_gambit() {
 
   // wait till end of day
   let end_time = new Date();
-  // end_time.setHours(end_time.getHours() + 12);
-  end_time.setSeconds(end_time.getSeconds() + 5);
+  end_time.setHours(end_time.getHours() + 12);
+  // end_time.setSeconds(end_time.getSeconds() + 5);
   let time = new Date();
   current_gambit.timer_token = setTimeout(
     end_gambit,
