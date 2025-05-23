@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const {
   createServerStatusChangeErrorEmbed,
   buildListEmbed,
@@ -19,6 +19,6 @@ module.exports = {
         "Nobodys online, the servers off!"
       );
     }
-    await interaction.reply({ embeds: embeds });
+    await interaction.reply({ embeds: embeds, flags: MessageFlags.Ephemeral });
   },
 };

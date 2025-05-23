@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { createServerStatusEmbed } = require("../../command_manager");
 
 module.exports = {
@@ -6,6 +6,6 @@ module.exports = {
     .setName("status")
     .setDescription("Gets the current status of the server!"),
   async execute(interaction) {
-    await interaction.reply({ embeds: createServerStatusEmbed() });
+    await interaction.reply({ embeds: createServerStatusEmbed(), flags: MessageFlags.Ephemeral });
   },
 };

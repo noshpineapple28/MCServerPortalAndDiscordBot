@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const {
   createServerMessageEmbed,
   createServerStatusChangeErrorEmbed,
@@ -45,6 +45,6 @@ module.exports = {
         "The server needs to be on in order to send messages!"
       );
     }
-    await interaction.reply({ embeds: embeds });
+    await interaction.reply({ embeds: embeds, flags: MessageFlags.Ephemeral });
   },
 };
