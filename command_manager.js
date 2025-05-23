@@ -212,6 +212,33 @@ function createServerGambitListWagersEmbed(discord_user_id) {
   return embeds;
 }
 
+function createServerInventoryEmbed(discord_user_id, username) {
+  console.log("Server list inventory command sent");
+  let user = undefined;
+  let users = JSON.parse(fs.readFileSync("./linked_users.json"));
+  for (let x in users)
+    if (users[x].discord_user === discord_user_id) user = users[x];
+  // if unlinked, exit
+  if (!user) return false;
+
+  text = "Here's your items!\n";
+  for (let item in user.inventory) {
+    text += `\`${item}\` - ${user.inventory[item]}\n`;
+  }
+  const embeds = [];
+  embeds.push(
+    new EmbedBuilder()
+      .setColor(STATUS_COLORS["idle"])
+      .setTitle(`${username}'s Inventory!`)
+      .setDescription(text)
+      .setAuthor({
+        name: `${SERVER.name} IMS`,
+        iconURL: "https://people.rit.edu/nam6711/icon.png",
+      })
+  );
+  return embeds;
+}
+
 module.exports = {
   initializeCommands,
   createServerStatusEmbed,
@@ -222,6 +249,7 @@ module.exports = {
   createServerWhitelistEmbed,
   createServerGambitEmbed,
   createServerGambitListWagersEmbed,
+  createServerInventoryEmbed,
   buildListEmbed,
   createServerLinkEmbed,
 };

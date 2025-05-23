@@ -47,8 +47,12 @@ class GambitInterface {
     if (
       text ===
       "Here's the payouts!\nAll other participants have had their pools deducted the appropriate amounts."
-    )
-      text = "No one participated. No payouts!";
+    ) {
+      text = "No winners today, No payouts!";
+    }
+
+    // save inventories
+    fs.writeFileSync("./linked_users.json", JSON.stringify(users));
 
     // produce the embed
     return this.end_gambit_embed(text);
