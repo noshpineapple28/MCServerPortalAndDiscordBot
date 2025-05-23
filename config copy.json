@@ -1,6 +1,9 @@
 {
     "token": "<bot_token>",
+	"clientId": "<bot_client_id>",
     "mc_server_port": "25565",
     "server_name": "<SERVER_NAME>",
-    "guildId": "<guild_id>"
+    "guildId": "<guild_id>",
+    "port": 3000,
+    "status": "Just hangin around!"
 }

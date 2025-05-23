@@ -74,16 +74,23 @@ function startClient() {
 
   // after bot is readied, gather channels we will post to
   client.on("ready", () => {
+    client.user.setStatus("idle");
     const Guilds = client.guilds.cache.map((guild) => guild.id);
     // for every guild we're in
     for (let guild of Guilds) {
       const channels = client.guilds.cache.get(guild).channels.cache;
       // go through all channels in a guild and save the one labeled
       for (let channel of channels) {
-        if (channel[1].name === SERVER.name.toLowerCase() && channel[1] instanceof TextChannel) {
+        if (
+          channel[1].name === SERVER.name.toLowerCase() &&
+          channel[1] instanceof TextChannel
+        ) {
           CHANNEL_IDS.push(channel[1].id);
         }
-        if (channel[1].name === `${SERVER.name.toLowerCase()}-chat` && channel[1] instanceof TextChannel) {
+        if (
+          channel[1].name === `${SERVER.name.toLowerCase()}-chat` &&
+          channel[1] instanceof TextChannel
+        ) {
           CHANNEL_CHAT_IDS.push(channel[1].id);
         }
       }
@@ -156,10 +163,12 @@ function parseEvent(event) {
     }
     case "START": {
       embeds.push(buildStartupEmbed());
+      client.user.setStatus("online");
       break;
     }
     case "STOP": {
       embeds.push(buildStopEmbed());
+      client.user.setStatus("idle");
       break;
     }
     default: {

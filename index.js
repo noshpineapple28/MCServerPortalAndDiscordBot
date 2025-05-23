@@ -7,10 +7,10 @@ const {
 } = require("./mcserver_manager");
 const { initializeCommands } = require("./command_manager");
 const socketIO = require("socket.io");
-const { mc_server_port, server_name } = require("./config.json")
+const { mc_server_port, server_name, port } = require("./config.json")
 const http = require("http");
 const app = express();
-const PORT = 3000;
+const PORT = port;
 let SERVER_IP = "";
 
 // server

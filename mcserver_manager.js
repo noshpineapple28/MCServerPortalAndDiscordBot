@@ -85,6 +85,7 @@ function query_players() {
  */
 MCSERVER.stdout.on("data", (data) => {
   const STR = data.toString();
+  if (!io) return;
 
   // turn off server event
   if (STR.includes("DISCORDCONTINUUM;Ended!")) {
