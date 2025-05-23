@@ -3,8 +3,6 @@ const {
   createServerStatusChangeErrorEmbed,
   createServerLinkEmbed,
 } = require("../../command_manager");
-const { whitelist } = require("../../mcserver_manager");
-
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("link")
@@ -23,9 +21,7 @@ module.exports = {
       interaction.user.username;
     let embeds = createServerLinkEmbed(username, sender, interaction.user.id);
     // if not an error from server status, then start the server!
-    if (embeds) {
-      whitelist(username);
-    } else {
+    if (!embeds) {
       embeds = createServerStatusChangeErrorEmbed(
         `${username} is not an existing whitelisted user`
       );

@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
-const WHITELISTED_USERS = require("../whitelist.json");
 const LINKED_USERS = require("./linked_users.json");
 // the status of the server
 let SERVER;
@@ -118,6 +117,7 @@ function createServerLinkEmbed(username, discord_user, discord_user_id) {
 
   // check to see if that user exists
   let user_exists = false;
+  WHITELISTED_USERS = JSON.parse(fs.readFileSync("../whitelist.json"));
   WHITELISTED_USERS.forEach((user) => {
     if (username === user.name) user_exists = true;
   });
