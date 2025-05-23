@@ -18,6 +18,7 @@ const {
 } = require("./gambits/gambit");
 const { link_helper } = require("./helpers/embeds");
 const { SomeoneDiesGambit } = require("./gambits/SomeoneDiesGambit");
+const { MurderGambit } = require("./gambits/MurderGambit");
 // client!
 let client;
 let SERVER;
@@ -172,7 +173,9 @@ function parseEvent(event) {
     // death message embed
     case "DEATH": {
       embeds.push(buildDeathEmbed(event_details[2], event_details[3]));
-      change_gambit_win_condition(SomeoneDiesGambit, "yes", true);
+      if (checkForMurder(event_details[3]))
+        change_gambit_win_condition(MurderGambit, "yes", true);
+      else change_gambit_win_condition(SomeoneDiesGambit, "yes", true);
       break;
     }
     case "START": {
@@ -208,6 +211,16 @@ function parseEvent(event) {
       });
     }
   }
+}
+
+function checkForMurder(message) {
+  // get all players on the whitelist
+  let murder_occured = false;
+  WHITELISTED_USERS = JSON.parse(fs.readFileSync("../whitelist.json"));
+  WHITELISTED_USERS.forEach((user) => {
+    if (message.includes(` by ${user.name}`)) murder_occured = true;
+  });
+  return murder_occured;
 }
 
 function buildStartupEmbed() {

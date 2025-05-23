@@ -1,9 +1,10 @@
 const { GambitInterface } = require("./GambitInterface");
 const { SomeoneDiesGambit } = require("./SomeoneDiesGambit");
 const { sendEmbeds } = require("../helpers/embeds");
+const { MurderGambit } = require("./MurderGambit");
 
 let current_gambit = new GambitInterface("No Gambit Ongoing");
-const POSSIBLE_GAMBITS = [SomeoneDiesGambit];
+const POSSIBLE_GAMBITS = [SomeoneDiesGambit, MurderGambit];
 
 function process_wager(discord_user_id, tokens, prediction) {
   return current_gambit.check_wager(discord_user_id, tokens, prediction);
