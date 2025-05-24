@@ -110,8 +110,11 @@ function startClient() {
     link_helper(client, CHANNEL_IDS);
     // handle gamble MUST HAPPEN AFTER HELPER IS COMPLETE
     create_gambit();
-    // create wandering trader
-    summon_trader();
+    // create wandering trader in 10 mins after starting
+    let wait = new Date();
+    wait.setMinutes(wait.getMinutes() + 10);
+    let cur = new Date();
+    setTimeout(summon_trader, wait.getTime() - cur.getTime());
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
