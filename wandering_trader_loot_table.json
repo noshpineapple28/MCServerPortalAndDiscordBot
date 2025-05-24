@@ -1,0 +1,28 @@
+{
+  "extremely_rare": [
+    { "name": "netherite_ingot", "type": "item", "quantity": 1, "price": 100 }
+  ],
+  "rare": [
+    { "name": "diamond", "type": "item", "quantity": 1, "price": 50 },
+    { "name": "villager", "type": "entity", "quantity": 1, "price": 70 }
+  ],
+  "uncommon": [
+    { "name": "cow", "type": "entity", "quantity": 1, "price": 10 },
+    { "name": "pig", "type": "entity", "quantity": 1, "price": 10 },
+    { "name": "chicken", "type": "entity", "quantity": 1, "price": 10 },
+    { "name": "fox", "type": "entity", "quantity": 1, "price": 15 },
+    { "name": "emerald", "type": "item", "quantity": 2, "price": 10 },
+    { "name": "raw_iron", "type": "item", "quantity": 3, "price": 10 },
+    { "name": "grass_block", "type": "item", "quantity": 1, "price": 10 }
+  ],
+  "common": [
+    { "name": "pale_tree_sapling", "type": "item", "quantity": 1, "price": 3 },
+    { "name": "spruce_sapling", "type": "item", "quantity": 1, "price": 3 },
+    { "name": "potato", "type": "item", "quantity": 1, "price": 2 },
+    { "name": "carrot", "type": "item", "quantity": 1, "price": 2 },
+    { "name": "raw_copper", "type": "item", "quantity": 2, "price": 2 },
+    { "name": "stick", "type": "item", "quantity": 4, "price": 2 },
+    { "name": "coal", "type": "item", "quantity": 2, "price": 4 },
+    { "name": "iron_nugget", "type": "item", "quantity": 5, "price": 4 }
+  ]
+}

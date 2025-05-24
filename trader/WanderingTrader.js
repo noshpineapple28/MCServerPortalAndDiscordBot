@@ -4,35 +4,10 @@ const fs = require("fs");
 
 class WanderingTrader {
   constructor() {
-    this.extremely_rare = [
-      { name: "netherite_ingot", quantity: 1, price: 100 },
-    ];
-    this.rare = [
-      { name: "diamond", quantity: 1, price: 50 },
-      { name: "villager", quantity: 1, price: 70 },
-    ];
-    this.uncommon = [
-      { name: "cow", quantity: 1, price: 10 },
-      { name: "pig", quantity: 1, price: 10 },
-      { name: "chicken", quantity: 1, price: 10 },
-      { name: "fox", quantity: 1, price: 15 },
-      { name: "emerald", quantity: 2, price: 10 },
-      { name: "raw_iron", quantity: 3, price: 10 },
-      { name: "grass_block", quantity: 1, price: 10 },
-    ];
-    this.common = [
-      { name: "pale_tree_sapling", quantity: 1, price: 3 },
-      { name: "potato", quantity: 1, price: 2 },
-      { name: "carrot", quantity: 1, price: 2 },
-      { name: "raw_copper", quantity: 2, price: 2 },
-      { name: "stick", quantity: 4, price: 2 },
-      { name: "coal", quantity: 2, price: 4 },
-      { name: "iron_nugget", quantity: 5, price: 4 },
-    ];
     this.currently_selling = {};
     this.players_hugged = [];
     this.able_to_trade = false;
-    this.image = "https://people.rit.edu/nam6711/kitch.png"
+    this.image = "https://people.rit.edu/nam6711/kitch.png";
   }
 
   summon() {
@@ -45,16 +20,17 @@ class WanderingTrader {
 
   reroll_shop() {
     // reroll
+    const LOOT_TABLES = JSON.parse(fs.readFileSync("./wandering_trader_loot_table.json"))
     this.players_hugged = [];
     this.currently_selling = {};
     for (let i = 0; i < items_in_shop; i++) {
       let val = Math.random();
       // common loot
       let loot_pool = [];
-      if (val >= 0.5) loot_pool = this.common;
-      else if (val >= 0.1) loot_pool = this.uncommon;
-      else if (val >= 0.02) loot_pool = this.rare;
-      else loot_pool = this.extremely_rare;
+      if (val >= 0.5) loot_pool = LOOT_TABLES["common"];
+      else if (val >= 0.1) loot_pool = LOOT_TABLES["uncommon"];
+      else if (val >= 0.02) loot_pool = LOOT_TABLES["rare"];
+      else loot_pool = LOOT_TABLES["extremely_rare"];
 
       // grab item
       let item = loot_pool[Math.floor(Math.random() * loot_pool.length)];
