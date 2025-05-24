@@ -28,7 +28,7 @@ class GambitInterface {
     const users = JSON.parse(fs.readFileSync("./linked_users.json"));
 
     // produce some flavor text about results
-    let text = "Here's the payouts!\n";
+    let text = `The result was \`${this.winning_prediction}\`! Here's the payouts for our correct wagers!\n`;
     for (let x in users) {
       let user = users[x];
       let tokens_won = 0;
@@ -40,7 +40,7 @@ class GambitInterface {
       }
       user.inventory.tokens += tokens_won;
       if (tokens_won > 0)
-        text += `\`${x}\` was given a payout of \`${tokens_won}\`\n`;
+        text += `\`${x}\` was given a payout of \`${tokens_won}\` Token(s)\n`;
     }
     text +=
       "All other participants have had their pools deducted the appropriate amounts.";
