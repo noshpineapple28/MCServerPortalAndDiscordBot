@@ -10,6 +10,7 @@ class GambitInterface {
     // possible inputs
     this.viable_predictions = new Set();
     this.winning_prediction = undefined;
+    this.image = "https://people.rit.edu/nam6711/gambit.png"
   }
 
   announcement_embed() {
@@ -19,7 +20,7 @@ class GambitInterface {
       .setDescription(`\`${this.title}\``)
       .setAuthor({
         name: `Scratches' Gambits`,
-        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
+        iconURL: this.image,
       });
   }
 
@@ -65,7 +66,7 @@ class GambitInterface {
       .setDescription(text)
       .setAuthor({
         name: `Scratches' Gambits`,
-        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
+        iconURL: this.image,
       });
   }
 
@@ -76,7 +77,7 @@ class GambitInterface {
       .setDescription(text)
       .setAuthor({
         name: `Scratches' Gambits`,
-        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
+        iconURL: this.image,
       });
   }
 
@@ -147,7 +148,7 @@ class GambitInterface {
       )
       .setAuthor({
         name: `Scratches' Gambits`,
-        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
+        iconURL: this.image,
       });
   }
 
@@ -164,7 +165,7 @@ class GambitInterface {
       .setDescription(text)
       .setAuthor({
         name: `Scratches Gambits`,
-        iconURL: "https://people.rit.edu/nam6711/maintainance.png",
+        iconURL: this.image,
       });
   }
 }
