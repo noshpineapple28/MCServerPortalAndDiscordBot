@@ -5,6 +5,5 @@
     "server_name": "<SERVER_NAME>",
     "guildId": "<guild_id>",
     "port": 3000,
-    "items_in_shop": 10,
-    "status": "Just hangin around!"
+    "items_in_shop": 10
 }
