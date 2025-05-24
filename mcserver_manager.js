@@ -1,5 +1,7 @@
 // SERVER
 const { spawn } = require("node:child_process");
+const { add_viable_option } = require("./gambits/gambit");
+const { KillAnAnimalGambit } = require("./gambits/KillAnAnimalGambit");
 // this is a function pointer
 let parseEvent;
 // the minecraft server console
@@ -66,6 +68,8 @@ function sendMessage(format, text, sender) {
  * responsible for the whitelist command
  */
 function whitelist(username) {
+  // add them to the current Gambit if its related
+  add_viable_option(KillAnAnimalGambit, username);
   MCSERVER.stdin.write(`whitelist add ${username}\n`);
 }
 
@@ -154,9 +158,6 @@ MCSERVER.stdout.on("data", (data) => {
     SERVER.status = "turning_off";
     io.emit("status", SERVER);
     MCSERVER.stdin.write("stop\n");
-  }
-  // start of command prompt
-  else if (STR.includes(`:\\`)) {
   } else if (STR.includes(`joined the game`)) {
     let name = STR.split(": ")[1].split(" ")[0];
     PLAYERS.push(name);
@@ -164,7 +165,7 @@ MCSERVER.stdout.on("data", (data) => {
     let name = STR.split(": ")[1].split(" ")[0];
     let index = PLAYERS.indexOf(name);
     PLAYERS.splice(index, 1);
-  } else {
+  } else if (!STR.includes(`:\\`)) {
     io.emit("console_message", data.toString());
   }
 });
@@ -192,5 +193,5 @@ module.exports = {
   query_players,
   giveItem,
   summonEntity,
-  check_if_online
+  check_if_online,
 };

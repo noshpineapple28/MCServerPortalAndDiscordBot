@@ -2,9 +2,15 @@ const { GambitInterface } = require("./GambitInterface");
 const { SomeoneDiesGambit } = require("./SomeoneDiesGambit");
 const { sendEmbeds } = require("../helpers/embeds");
 const { MurderGambit } = require("./MurderGambit");
+const { KillAnAnimalGambit } = require("./KillAnAnimalGambit");
 
 let current_gambit = new GambitInterface("No Gambit Ongoing");
-const POSSIBLE_GAMBITS = [SomeoneDiesGambit, MurderGambit];
+const POSSIBLE_GAMBITS = [SomeoneDiesGambit, MurderGambit, KillAnAnimalGambit];
+
+function add_viable_option(gambit_type, option) {
+  if (gambit_type.constructor !== current_gambit.constructor) return;
+  current_gambit.viable_predictions.add(option);
+}
 
 function get_wager_options() {
   return current_gambit.get_gambit_options();
@@ -23,9 +29,20 @@ function change_gambit_win_condition(
   new_condition,
   end_early = false
 ) {
-  if (!(current_gambit instanceof gambit_to_check_for)) return;
+  if (current_gambit.constructor() !== gambit_to_check_for.constructor) return;
   current_gambit.winning_prediction = new_condition;
   if (end_early) end_gambit();
+}
+
+/**
+ * this will take input from server events and process them to see if a gambit should end
+ * @param {GambitInterface} gambit_type the type of gambit we are looking to process
+ * @param  {...any} inputs
+ */
+function process_gambit_input(gambit_type, ...inputs) {
+  if (gambit_type.constructor !== current_gambit.constructor) return;
+
+  if (current_gambit.check_input(inputs[0], inputs[1])) end_gambit();
 }
 
 function end_gambit() {
@@ -70,4 +87,6 @@ module.exports = {
   process_wager_listing,
   change_gambit_win_condition,
   get_wager_options,
+  add_viable_option,
+  process_gambit_input,
 };

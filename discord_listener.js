@@ -15,11 +15,13 @@ const { EmbedBuilder } = require("@discordjs/builders");
 const {
   create_gambit,
   change_gambit_win_condition,
+  process_gambit_input,
 } = require("./gambits/gambit");
 const { link_helper } = require("./helpers/embeds");
 const { SomeoneDiesGambit } = require("./gambits/SomeoneDiesGambit");
 const { MurderGambit } = require("./gambits/MurderGambit");
 const { summon_trader } = require("./trader/trader_helper");
+const { KillAnAnimalGambit } = require("./gambits/KillAnAnimalGambit");
 // client!
 let client;
 let SERVER;
@@ -192,6 +194,17 @@ function parseEvent(event) {
     case "STOP": {
       embeds.push(buildStopEmbed());
       client.user.setStatus("idle");
+      break;
+    }
+    case "ENTITYKILLEVENT": {
+      process_gambit_input(
+        KillAnAnimalGambit,
+        event_details[1],
+        event_details[2]
+      );
+      break;
+    }
+    case "ENTITYITEMPICKUPEVENT": {
       break;
     }
     default: {
