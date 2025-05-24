@@ -1,1 +1,6 @@
-{ "username": { "discord_user": "", "inventory": { "tokens": 10 } } }
+{
+  "username": {
+    "discord_user": "",
+    "inventory": { "tokens": { "quantity": 10 } }
+  }
+}

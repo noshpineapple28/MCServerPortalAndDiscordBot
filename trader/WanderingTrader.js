@@ -20,7 +20,9 @@ class WanderingTrader {
 
   reroll_shop() {
     // reroll
-    const LOOT_TABLES = JSON.parse(fs.readFileSync("./wandering_trader_loot_table.json"))
+    const LOOT_TABLES = JSON.parse(
+      fs.readFileSync("./wandering_trader_loot_table.json")
+    );
     this.players_hugged = [];
     this.currently_selling = {};
     for (let i = 0; i < items_in_shop; i++) {
@@ -43,6 +45,7 @@ class WanderingTrader {
         this.currently_selling[item.name] = {
           quantity: item.quantity,
           price: item.price,
+          type: item.type,
         };
       }
     }
@@ -96,7 +99,7 @@ class WanderingTrader {
         "I've only so much coin, I apologize. I hope my hugs are coin enough!";
       if (!this.players_hugged.includes(user.discord_user)) {
         text = "I've slipped some coin into ur inventory, carry on!";
-        user.inventory.tokens += 1;
+        user.inventory.tokens.quantity += 1;
         this.players_hugged.push(user.discord_user);
         // save user inventories
         fs.writeFileSync("./linked_users.json", JSON.stringify(USERS));
@@ -106,12 +109,16 @@ class WanderingTrader {
 
     // check if in user inven
     if (user.inventory[item_name])
-      user.inventory[item_name] += this.currently_selling[item_name].quantity;
-    else user.inventory[item_name] = this.currently_selling[item_name].quantity;
+      user.inventory[item_name].quantity +=
+        this.currently_selling[item_name].quantity;
+    else
+      user.inventory[item_name] = {
+        quantity: this.currently_selling[item_name].quantity,
+        type: this.currently_selling[item_name].type,
+      };
     // descriment their tokens
-    user.inventory.tokens -= this.currently_selling[item_name].price;
+    user.inventory.tokens.quantity -= this.currently_selling[item_name].price;
     delete this.currently_selling[item_name];
-    console.log(this.currently_selling);
     // save user inventories
     fs.writeFileSync("./linked_users.json", JSON.stringify(USERS));
     return [this.trade_success_embed(readable_item_name), true];

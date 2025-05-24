@@ -1,8 +1,12 @@
 const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
 const { process_wager, process_wager_listing } = require("./gambits/gambit");
-const LINKED_USERS = require("./linked_users.json");
 const { attempt_trade } = require("./trader/trader_helper");
+const {
+  summonEntity,
+  giveItem,
+  check_if_online,
+} = require("./mcserver_manager");
 // the status of the server
 let SERVER;
 
@@ -128,13 +132,14 @@ function createServerLinkEmbed(username, discord_user, discord_user_id) {
   }
 
   // link discord user to minecraft user
+  const LINKED_USERS = JSON.parse(fs.readFileSync("./linked_users.json"));
   if (LINKED_USERS[username])
     LINKED_USERS[username].discord_user = discord_user_id;
   else
     LINKED_USERS[username] = {
       discord_user: discord_user_id,
       inventory: {
-        tokens: 10,
+        tokens: { quantity: 10 },
       },
     };
   // save the json file
@@ -224,7 +229,7 @@ function createServerInventoryEmbed(discord_user_id, username) {
 
   text = "Here's your items!\n";
   for (let item in user.inventory) {
-    text += `\`${item}\` - ${user.inventory[item]}\n`;
+    text += `\`${item}\` - ${user.inventory[item].quantity}\n`;
   }
   const embeds = [];
   embeds.push(
@@ -233,7 +238,7 @@ function createServerInventoryEmbed(discord_user_id, username) {
       .setTitle(`${username}'s Inventory!`)
       .setDescription(text)
       .setAuthor({
-        name: `${SERVER.name} IMS`,
+        name: `${SERVER.name} Inventory Manager`,
         iconURL: "https://people.rit.edu/nam6711/icon.png",
       })
   );
@@ -245,6 +250,106 @@ function createServerTradeEmbed(discord_user_id, item_name) {
 
   const embeds = attempt_trade(discord_user_id, item_name);
   return embeds;
+}
+
+function createServerInventoryPullEmbed(discord_user_id, item_name, quantity) {
+  console.log("Server inventory pull request command sent");
+  // make sure user exists
+  const USERS = JSON.parse(fs.readFileSync("./linked_users.json"));
+  let user = undefined;
+  let mcusername = "";
+  for (let x in USERS) {
+    if (USERS[x].discord_user === discord_user_id) {
+      user = USERS[x];
+      mcusername = x;
+    }
+  }
+  if (!user)
+    return [
+      new EmbedBuilder()
+        .setColor(0)
+        .setTitle(`Inventory Error`)
+        .setDescription(
+          "You aren't linked to a whitelisted user, please use `link` before pulling from inventory!"
+        )
+        .setAuthor({
+          name: `${SERVER.name} Inventory Manager`,
+          iconURL: "https://people.rit.edu/nam6711/icon.png",
+        }),
+    ];
+
+  // check if item is in inventory, and at the specified quantity
+  if (!user.inventory[item_name] || item_name === "tokens")
+    return [
+      new EmbedBuilder()
+        .setColor(0)
+        .setTitle(`Inventory Error`)
+        .setDescription(
+          `You can't pull ${item_name.replace(
+            "_",
+            " "
+          )} out, either because you don't have it or its not able to be removed`
+        )
+        .setAuthor({
+          name: `${SERVER.name} Inventory Manager`,
+          iconURL: "https://people.rit.edu/nam6711/icon.png",
+        }),
+    ];
+  if (quantity && user.inventory[item_name].quantity < quantity)
+    return [
+      new EmbedBuilder()
+        .setColor(0)
+        .setTitle(`Inventory Error`)
+        .setDescription(
+          `You don't have enough ${item_name.replace(
+            "_",
+            " "
+          )} in inventory to pull that many out`
+        )
+        .setAuthor({
+          name: `${SERVER.name} Inventory Manager`,
+          iconURL: "https://people.rit.edu/nam6711/icon.png",
+        }),
+    ];
+  // check if user is online
+  if (!check_if_online(mcusername))
+    return [
+      new EmbedBuilder()
+        .setColor(0)
+        .setTitle(`Inventory Error`)
+        .setDescription(
+          `You have to be logged in to the server to pull an item out!`
+        )
+        .setAuthor({
+          name: `${SERVER.name} Inventory Manager`,
+          iconURL: "https://people.rit.edu/nam6711/icon.png",
+        }),
+    ];
+
+  // if quantity not specified, pull all out
+  if (!quantity) quantity = user.inventory[item_name].quantity;
+  // update inventory
+  user.inventory[item_name].quantity -= quantity;
+  // if entity, call summon entity, otherwise give item
+  if (user.inventory[item_name].type === "entity")
+    summonEntity(mcusername, item_name, quantity);
+  else giveItem(mcusername, item_name, quantity);
+
+  // update inventory
+  if (user.inventory[item_name].quantity === 0)
+    delete user.inventory[item_name];
+  fs.writeFileSync("./linked_users.json", JSON.stringify(USERS));
+
+  return [
+    new EmbedBuilder()
+      .setColor(STATUS_COLORS["idle"])
+      .setTitle(`${mcusername}'s Inventory!`)
+      .setDescription("The item was successfully pulled from your inventory")
+      .setAuthor({
+        name: `${SERVER.name} Inventory Manager`,
+        iconURL: "https://people.rit.edu/nam6711/icon.png",
+      }),
+  ];
 }
 
 module.exports = {
@@ -259,6 +364,7 @@ module.exports = {
   createServerGambitListWagersEmbed,
   createServerInventoryEmbed,
   createServerTradeEmbed,
+  createServerInventoryPullEmbed,
   buildListEmbed,
   createServerLinkEmbed,
 };

@@ -70,6 +70,27 @@ function whitelist(username) {
 }
 
 /**
+ * gives a user an item
+ * @param {String} user
+ * @param {String} item
+ * @param {Number} quantity
+ */
+function giveItem(user, item, quantity) {
+  MCSERVER.stdin.write(`give ${user} ${item} ${quantity}\n`);
+}
+
+/**
+ * summon an entity at a user
+ * @param {String} user
+ * @param {String} entity
+ * @param {Number} quantity
+ */
+function summonEntity(user, entity, quantity) {
+  for (let i = 0; i < quantity; i++)
+    MCSERVER.stdin.write(`execute at ${user} run summon ${entity} ~ ~ ~\n`);
+}
+
+/**
  * responsible for the whitelist command
  */
 function query_players() {
@@ -77,6 +98,15 @@ function query_players() {
   let text = "The following are online: ";
   PLAYERS.forEach((name) => (text += `\`${name}\` `));
   return [total, text];
+}
+
+/**
+ * check if player is online
+ * @param {String} user
+ * @returns bool
+ */
+function check_if_online(user) {
+  return PLAYERS.includes(user);
 }
 
 /**
@@ -160,4 +190,7 @@ module.exports = {
   sendMessage,
   whitelist,
   query_players,
+  giveItem,
+  summonEntity,
+  check_if_online
 };
