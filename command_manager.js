@@ -2,6 +2,7 @@ const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
 const { process_wager, process_wager_listing } = require("./gambits/gambit");
 const LINKED_USERS = require("./linked_users.json");
+const { attempt_trade } = require("./trader/trader_helper");
 // the status of the server
 let SERVER;
 
@@ -239,6 +240,13 @@ function createServerInventoryEmbed(discord_user_id, username) {
   return embeds;
 }
 
+function createServerTradeEmbed(discord_user_id, item_name) {
+  console.log("Server trade command sent");
+
+  const embeds = attempt_trade(discord_user_id, item_name);
+  return embeds;
+}
+
 module.exports = {
   initializeCommands,
   createServerStatusEmbed,
@@ -250,6 +258,7 @@ module.exports = {
   createServerGambitEmbed,
   createServerGambitListWagersEmbed,
   createServerInventoryEmbed,
+  createServerTradeEmbed,
   buildListEmbed,
   createServerLinkEmbed,
 };

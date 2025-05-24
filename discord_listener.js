@@ -19,6 +19,7 @@ const {
 const { link_helper } = require("./helpers/embeds");
 const { SomeoneDiesGambit } = require("./gambits/SomeoneDiesGambit");
 const { MurderGambit } = require("./gambits/MurderGambit");
+const { summon_trader } = require("./trader/trader_helper");
 // client!
 let client;
 let SERVER;
@@ -109,6 +110,8 @@ function startClient() {
     link_helper(client, CHANNEL_IDS);
     // handle gamble MUST HAPPEN AFTER HELPER IS COMPLETE
     create_gambit();
+    // create wandering trader
+    summon_trader();
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
