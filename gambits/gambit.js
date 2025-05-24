@@ -6,6 +6,10 @@ const { MurderGambit } = require("./MurderGambit");
 let current_gambit = new GambitInterface("No Gambit Ongoing");
 const POSSIBLE_GAMBITS = [SomeoneDiesGambit, MurderGambit];
 
+function get_wager_options() {
+  return current_gambit.get_gambit_options();
+}
+
 function process_wager(discord_user_id, tokens, prediction) {
   return current_gambit.check_wager(discord_user_id, tokens, prediction);
 }
@@ -65,4 +69,5 @@ module.exports = {
   process_wager,
   process_wager_listing,
   change_gambit_win_condition,
+  get_wager_options,
 };

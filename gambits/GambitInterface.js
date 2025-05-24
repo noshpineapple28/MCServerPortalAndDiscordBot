@@ -10,7 +10,7 @@ class GambitInterface {
     // possible inputs
     this.viable_predictions = new Set();
     this.winning_prediction = undefined;
-    this.image = "https://people.rit.edu/nam6711/gambit.png"
+    this.image = "https://people.rit.edu/nam6711/gambit.png";
   }
 
   announcement_embed() {
@@ -167,6 +167,24 @@ class GambitInterface {
         name: `Scratches Gambits`,
         iconURL: this.image,
       });
+  }
+
+  get_gambit_options() {
+    if (this.viable_predictions.size === 0)
+      return [this.#create_error_embed("There is currently no ongoing Gambit")];
+    let text = "Here are the viable options:\n";
+    for (let value of this.viable_predictions.values()) text += `\`${value}\` `;
+    embeds.push(
+      new EmbedBuilder()
+        .setColor(0xf12bac)
+        .setTitle("Gambit List!")
+        .setDescription(text)
+        .setAuthor({
+          name: `Scratches Gambits`,
+          iconURL: this.image,
+        })
+    );
+    return embeds;
   }
 }
 

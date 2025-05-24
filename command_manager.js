@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
-const { process_wager, process_wager_listing } = require("./gambits/gambit");
+const { process_wager, process_wager_listing, get_wager_options } = require("./gambits/gambit");
 const { attempt_trade } = require("./trader/trader_helper");
 const {
   summonEntity,
@@ -211,6 +211,13 @@ function createServerGambitEmbed(discord_user_id, tokens, prediction) {
   return embeds;
 }
 
+function createServerGambitOptionsEmbed() {
+  console.log("Server gambit wager options command sent");
+
+  const embeds = get_wager_options();
+  return embeds;
+}
+
 function createServerGambitListWagersEmbed(discord_user_id) {
   console.log("Server gambit list wagers command sent");
 
@@ -365,6 +372,7 @@ module.exports = {
   createServerInventoryEmbed,
   createServerTradeEmbed,
   createServerInventoryPullEmbed,
+  createServerGambitOptionsEmbed,
   buildListEmbed,
   createServerLinkEmbed,
 };
