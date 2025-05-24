@@ -62,8 +62,7 @@ function end_gambit() {
 
   // wait for 6 hours
   let six_am = new Date();
-  // six_am.setHours(six_am.getHours() + Math.ceil(Math.random() * 6));
-  six_am.setSeconds(six_am.getSeconds() + 2);
+  six_am.setHours(six_am.getHours() + Math.ceil(Math.random() * 6));
   let time = new Date();
   setTimeout(create_gambit, six_am.getTime() - time.getTime());
 }
@@ -81,7 +80,6 @@ function create_gambit() {
   // wait till end of day
   let end_time = new Date();
   end_time.setHours(end_time.getHours() + 12);
-  // end_time.setSeconds(end_time.getSeconds() + 5);
   let time = new Date();
   current_gambit.timer_token = setTimeout(
     end_gambit,
