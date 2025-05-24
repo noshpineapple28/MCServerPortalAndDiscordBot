@@ -11,6 +11,7 @@ class GambitInterface {
     this.viable_predictions = new Set();
     this.winning_prediction = undefined;
     this.image = "https://people.rit.edu/nam6711/gambit.png";
+    this.case_sensitive = true;
   }
 
   announcement_embed() {
@@ -28,30 +29,35 @@ class GambitInterface {
     const users = JSON.parse(fs.readFileSync("./linked_users.json"));
 
     // produce some flavor text about results
-    let text = `The result was \`${this.winning_prediction}\`! Here's the payouts for our correct wagers!\n`;
+    let text = `The result was \`${this.winning_prediction.replace(
+      "\n",
+      " "
+    )}\`!`;
+    let winner_text = `\nHere's the payouts for our correct wagers!\n`;
+    let winners_exist = false;
     for (let x in users) {
       let user = users[x];
       let tokens_won = 0;
       if (!this.tokens_bet[user.discord_user]) continue;
       for (let prediction in this.tokens_bet[user.discord_user]) {
-        if (prediction === this.winning_prediction)
+        if (prediction === this.winning_prediction) {
           tokens_won += this.tokens_bet[user.discord_user][prediction];
-        else tokens_won -= this.tokens_bet[user.discord_user][prediction];
+          winners_exist = true;
+        } else {
+          tokens_won -= this.tokens_bet[user.discord_user][prediction];
+        }
       }
       user.inventory.tokens += tokens_won;
       if (tokens_won > 0)
-        text += `\`${x}\` was given a payout of \`${tokens_won}\` Token(s)\n`;
+        winner_text += `\`${x}\` was given a payout of \`${tokens_won}\` Token(s)\n`;
     }
-    text +=
-      "All other participants have had their pools deducted the appropriate amounts.";
-    // if no one wagered, print that
-    if (
-      text ===
-      "Here's the payouts!\nAll other participants have had their pools deducted the appropriate amounts."
-    ) {
-      text = "No winners today, No payouts!";
+    if (winners_exist) {
+      text += winner_text;
+      text +=
+        "All other participants have had their pools deducted the appropriate amounts.";
+    } else {
+      text += "\nNo winners today, only losers, sorry!";
     }
-
     // save inventories
     fs.writeFileSync("./linked_users.json", JSON.stringify(users));
 
@@ -98,7 +104,7 @@ class GambitInterface {
         text += `\`${value}\` `;
       embeds.push(
         this.#create_error_embed(
-          `That is not a viable prediction for this wager.\n Potential options include: ${text} \nNOT CASE SENSITIVE`
+          `That is not a viable prediction for this wager.\n Potential options include: ${text}`
         )
       );
       return embeds;
@@ -172,8 +178,11 @@ class GambitInterface {
   get_gambit_options() {
     if (this.viable_predictions.size === 0)
       return [this.#create_error_embed("There is currently no ongoing Gambit")];
-    let text = "Here are the viable options:\n";
+    let text = `Here are the viable options `;
+    if (this.case_sensitive) text += "[**CASE SENSITIVE**]";
+    text += `:\n`;
     for (let value of this.viable_predictions.values()) text += `\`${value}\` `;
+    const embeds = [];
     embeds.push(
       new EmbedBuilder()
         .setColor(0xf12bac)

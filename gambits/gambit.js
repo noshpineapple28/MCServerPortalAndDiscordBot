@@ -2,10 +2,16 @@ const { GambitInterface } = require("./GambitInterface");
 const { SomeoneDiesGambit } = require("./SomeoneDiesGambit");
 const { sendEmbeds } = require("../helpers/embeds");
 const { MurderGambit } = require("./MurderGambit");
-const { KillAnAnimalGambit } = require("./KillAnAnimalGambit");
+const { KillAnEntityGambit } = require("./KillAnEntityGambit");
+const { GetAnItemGambit } = require("./GetAnItemGambit");
 
 let current_gambit = new GambitInterface("No Gambit Ongoing");
-const POSSIBLE_GAMBITS = [SomeoneDiesGambit, MurderGambit, KillAnAnimalGambit];
+const POSSIBLE_GAMBITS = [
+  KillAnEntityGambit,
+  GetAnItemGambit,
+  MurderGambit,
+  SomeoneDiesGambit,
+];
 
 function add_viable_option(gambit_type, option) {
   if (gambit_type.constructor !== current_gambit.constructor) return;
@@ -29,7 +35,7 @@ function change_gambit_win_condition(
   new_condition,
   end_early = false
 ) {
-  if (current_gambit.constructor() !== gambit_to_check_for.constructor) return;
+  if (current_gambit.constructor !== gambit_to_check_for.constructor) return;
   current_gambit.winning_prediction = new_condition;
   if (end_early) end_gambit();
 }
@@ -42,7 +48,8 @@ function change_gambit_win_condition(
 function process_gambit_input(gambit_type, ...inputs) {
   if (gambit_type.constructor !== current_gambit.constructor) return;
 
-  if (current_gambit.check_input(inputs[0], inputs[1])) end_gambit();
+  if (current_gambit.check_input(inputs[0].trim(), inputs[1].trim()))
+    end_gambit();
 }
 
 function end_gambit() {
@@ -55,7 +62,8 @@ function end_gambit() {
 
   // wait for 6 hours
   let six_am = new Date();
-  six_am.setHours(six_am.getHours() + Math.ceil(Math.random() * 6));
+  // six_am.setHours(six_am.getHours() + Math.ceil(Math.random() * 6));
+  six_am.setSeconds(six_am.getSeconds() + 2);
   let time = new Date();
   setTimeout(create_gambit, six_am.getTime() - time.getTime());
 }

@@ -1,7 +1,7 @@
 // SERVER
 const { spawn } = require("node:child_process");
 const { add_viable_option } = require("./gambits/gambit");
-const { KillAnAnimalGambit } = require("./gambits/KillAnAnimalGambit");
+const { KillAnEntityGambit } = require("./gambits/KillAnEntityGambit");
 // this is a function pointer
 let parseEvent;
 // the minecraft server console
@@ -69,7 +69,7 @@ function sendMessage(format, text, sender) {
  */
 function whitelist(username) {
   // add them to the current Gambit if its related
-  add_viable_option(KillAnAnimalGambit, username);
+  add_viable_option(new KillAnEntityGambit(), username);
   MCSERVER.stdin.write(`whitelist add ${username}\n`);
 }
 

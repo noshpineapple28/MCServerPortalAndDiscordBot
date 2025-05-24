@@ -21,7 +21,8 @@ const { link_helper } = require("./helpers/embeds");
 const { SomeoneDiesGambit } = require("./gambits/SomeoneDiesGambit");
 const { MurderGambit } = require("./gambits/MurderGambit");
 const { summon_trader } = require("./trader/trader_helper");
-const { KillAnAnimalGambit } = require("./gambits/KillAnAnimalGambit");
+const { KillAnEntityGambit } = require("./gambits/KillAnEntityGambit");
+const { GetAnItemGambit } = require("./gambits/GetAnItemGambit");
 // client!
 let client;
 let SERVER;
@@ -182,8 +183,8 @@ function parseEvent(event) {
     case "DEATH": {
       embeds.push(buildDeathEmbed(event_details[2], event_details[3]));
       if (checkForMurder(event_details[3]))
-        change_gambit_win_condition(MurderGambit, "yes", true);
-      else change_gambit_win_condition(SomeoneDiesGambit, "yes", true);
+        change_gambit_win_condition(new MurderGambit(), "yes", true);
+      else change_gambit_win_condition(new SomeoneDiesGambit(), "yes", true);
       break;
     }
     case "START": {
@@ -198,14 +199,19 @@ function parseEvent(event) {
     }
     case "ENTITYKILLEVENT": {
       process_gambit_input(
-        KillAnAnimalGambit,
-        event_details[1],
-        event_details[2]
+        new KillAnEntityGambit(),
+        event_details[2],
+        event_details[3]
       );
-      break;
+      return;
     }
     case "ENTITYITEMPICKUPEVENT": {
-      break;
+      process_gambit_input(
+        new GetAnItemGambit(),
+        event_details[2],
+        event_details[3]
+      );
+      return;
     }
     default: {
       console.log("Non Embed event: ", event);

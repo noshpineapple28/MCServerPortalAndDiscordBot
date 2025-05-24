@@ -6,6 +6,7 @@ class SomeoneDiesGambit extends GambitInterface {
     this.viable_predictions.add("yes");
     this.viable_predictions.add("no");
     this.winning_prediction = "no";
+    this.case_sensitive = false;
   }
 
   check_wager(discord_user_id, token_amount, prediction) {

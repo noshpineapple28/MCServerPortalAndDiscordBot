@@ -1,24 +1,15 @@
 const fs = require("fs");
 const { GambitInterface } = require("./GambitInterface");
 
-class KillAnAnimalGambit extends GambitInterface {
+class GetAnItemGambit extends GambitInterface {
   constructor() {
-    super("Who will be the first to kill an animal today?");
+    super("Who will be the first to get a item today?");
     // all possible animals to pick from
-    this.animals = [
-      "pig",
-      "horse",
-      "cow",
-      "chicken",
-      "zombie",
-      "ender dragon",
-      "enderman",
-      "skeleton",
-      "whither",
-      "whither skeleton",
-    ];
-    let animal = this.animals[Math.floor(Math.random() * this.animals.length)];
-    this.title = `Who will be the first to kill an ${animal} today? ANSWERS CASE SENSITIVE`;
+    this.items = JSON.parse(
+      fs.readFileSync("./wager_entities_and_items.json")
+    ).items;
+    this.item = this.items[Math.floor(Math.random() * this.items.length)];
+    this.title = `Who will be the first to acquire a ${this.item} today?`;
 
     // read all whitelisted users to generate predictions
     const USERS = JSON.parse(fs.readFileSync("../whitelist.json"));
@@ -31,13 +22,12 @@ class KillAnAnimalGambit extends GambitInterface {
 
   /**
    * checks if a dead entity is related to the gambit, and if so what killed it
-   * @param {String} entity_dead the entity that died
    * @param {String} causing_entity the entity that caused the death
+   * @param {String} rec_item the item received
    */
-  check_input(entity_dead, causing_entity) {
-    console.log(entity_dead, causing_entity);
+  check_input(causing_entity, rec_item) {
     if (
-      entity_dead !== this.animals &&
+      rec_item.toLowerCase().replace("_", " ") !== this.item &&
       !this.viable_predictions.has(causing_entity)
     )
       return false;
@@ -47,4 +37,4 @@ class KillAnAnimalGambit extends GambitInterface {
   }
 }
 
-module.exports = { KillAnAnimalGambit };
+module.exports = { GetAnItemGambit };
