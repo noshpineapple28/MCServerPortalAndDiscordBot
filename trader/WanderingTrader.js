@@ -135,7 +135,7 @@ class WanderingTrader {
       )}\` - \`${this.currently_selling[item].price}\` Tokens\n`;
     }
     return new EmbedBuilder()
-      .setTitle("The Wandering Theif Arrives!")
+      .setTitle("The Wandering Thief Arrives!")
       .setColor(0x915930)
       .setDescription(text)
       .setAuthor({
@@ -146,7 +146,7 @@ class WanderingTrader {
 
   shop_leave_embed() {
     return new EmbedBuilder()
-      .setTitle("The Wandering Theif Departs!")
+      .setTitle("The Wandering Thief Departs!")
       .setColor(0x915930)
       .setDescription("Can't stay in one place too long!")
       .setAuthor({
