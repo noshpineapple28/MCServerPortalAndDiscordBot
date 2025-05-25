@@ -126,7 +126,7 @@ class GambitInterface {
       );
     if (mc_user.inventory.tokens.quantity < amount)
       return this.#create_error_embed(
-        `Insufficient tokens. Requested ${amount}, own ${mc_user.inventory.tokens}`
+        `Insufficient tokens. Requested ${amount}, own ${mc_user.inventory.tokens.quantity}`
       );
 
     // find how much theyve wagered and ensure they can afford this
@@ -134,9 +134,9 @@ class GambitInterface {
       let total_wagered = 0;
       for (let wager in this.tokens_bet[mc_user.discord_user])
         total_wagered += this.tokens_bet[mc_user.discord_user][wager];
-      if (total_wagered + amount > mc_user.inventory.tokens)
+      if (total_wagered + amount > mc_user.inventory.tokens.quantity)
         return this.#create_error_embed(
-          `You've already pooled ${total_wagered} tokens. If you add ${amount} you would exceed how many you own, which is ${mc_user.inventory.tokens}.`
+          `You've already pooled ${total_wagered} tokens. If you add ${amount} you would exceed how many you own, which is ${mc_user.inventory.tokens.quantity}.`
         );
     } else {
       this.tokens_bet[mc_user.discord_user] = {};
