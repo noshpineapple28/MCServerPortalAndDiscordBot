@@ -1,28 +1,62 @@
 {
   "extremely_rare": [
-    { "name": "netherite_ingot", "type": "item", "quantity": 1, "price": 100 }
+    { "name": "netherite_ingot", "type": "item", "quantity": 1, "price": 500 },
+    { "name": "diamond_axe", "type": "item", "quantity": 1, "price": 200 },
+    { "name": "diamond_pickaxe", "type": "item", "quantity": 1, "price": 200 },
+    { "name": "diamond_sword", "type": "item", "quantity": 1, "price": 200 },
+    { "name": "villager", "type": "entity", "quantity": 1, "price": 200 }
   ],
   "rare": [
-    { "name": "diamond", "type": "item", "quantity": 1, "price": 50 },
-    { "name": "villager", "type": "entity", "quantity": 1, "price": 70 }
+    {
+      "name": "wither_skeleton",
+      "type": "entity",
+      "quantity": 1,
+      "price": 250
+    },
+    {
+      "name": "ominous_trial_key",
+      "type": "item",
+      "quantity": 1,
+      "price": 200
+    },
+    { "name": "host_armor_trim", "type": "item", "quantity": 1, "price": 300 },
+    { "name": "trial_key", "type": "item", "quantity": 1, "price": 150 },
+    { "name": "nautilus_shell", "type": "item", "quantity": 1, "price": 150 },
+    { "name": "name_tag", "type": "item", "quantity": 1, "price": 100 },
+    { "name": "diamond", "type": "item", "quantity": 1, "price": 100 }
   ],
   "uncommon": [
+    { "name": "fox", "type": "entity", "quantity": 1, "price": 15 },
+    { "name": "redstone_dust", "type": "item", "quantity": 5, "price": 15 },
+    { "name": "slimeball", "type": "entity", "quantity": 2, "price": 15 },
+    { "name": "cherry_sapling", "type": "item", "quantity": 1, "price": 15 },
     { "name": "cow", "type": "entity", "quantity": 1, "price": 10 },
     { "name": "pig", "type": "entity", "quantity": 1, "price": 10 },
     { "name": "chicken", "type": "entity", "quantity": 1, "price": 10 },
-    { "name": "fox", "type": "entity", "quantity": 1, "price": 15 },
     { "name": "emerald", "type": "item", "quantity": 2, "price": 10 },
     { "name": "raw_iron", "type": "item", "quantity": 3, "price": 10 },
+    { "name": "pale_tree_sapling", "type": "item", "quantity": 1, "price": 10 },
+    { "name": "spruce_sapling", "type": "item", "quantity": 1, "price": 10 },
     { "name": "grass_block", "type": "item", "quantity": 1, "price": 10 }
   ],
   "common": [
-    { "name": "pale_tree_sapling", "type": "item", "quantity": 1, "price": 3 },
-    { "name": "spruce_sapling", "type": "item", "quantity": 1, "price": 3 },
-    { "name": "potato", "type": "item", "quantity": 1, "price": 2 },
-    { "name": "carrot", "type": "item", "quantity": 1, "price": 2 },
+    { "name": "shield", "type": "item", "quantity": 1, "price": 10 },
+    { "name": "iron_pickaxe", "type": "item", "quantity": 1, "price": 10 },
+    { "name": "iron_hoe", "type": "item", "quantity": 1, "price": 10 },
+    { "name": "iron_axe", "type": "item", "quantity": 1, "price": 10 },
+    { "name": "cooked_chicken", "type": "item", "quantity": 2, "price": 7 },
+    { "name": "coal", "type": "item", "quantity": 4, "price": 5 },
+    { "name": "charcoal", "type": "item", "quantity": 4, "price": 5 },
+    { "name": "bread", "type": "item", "quantity": 2, "price": 5 },
+    { "name": "baked_potato", "type": "item", "quantity": 4, "price": 5 },
+    { "name": "iron_nugget", "type": "item", "quantity": 5, "price": 4 },
+    { "name": "dark_oak_sapling", "type": "item", "quantity": 1, "price": 4 },
+    { "name": "acacia_sapling", "type": "item", "quantity": 1, "price": 3 },
+    { "name": "birch_sapling", "type": "item", "quantity": 1, "price": 3 },
+    { "name": "oak_sapling", "type": "item", "quantity": 1, "price": 3 },
+    { "name": "potato", "type": "item", "quantity": 2, "price": 2 },
+    { "name": "carrot", "type": "item", "quantity": 3, "price": 2 },
     { "name": "raw_copper", "type": "item", "quantity": 2, "price": 2 },
-    { "name": "stick", "type": "item", "quantity": 4, "price": 2 },
-    { "name": "coal", "type": "item", "quantity": 2, "price": 4 },
-    { "name": "iron_nugget", "type": "item", "quantity": 5, "price": 4 }
+    { "name": "stick", "type": "item", "quantity": 4, "price": 2 }
   ]
 }

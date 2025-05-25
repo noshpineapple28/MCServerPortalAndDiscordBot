@@ -89,7 +89,7 @@ class WanderingTrader {
     // see if they have the tokens for it
     if (
       readable_item_name !== "hug" &&
-      user.inventory.tokens < this.currently_selling[item_name].price
+      user.inventory.tokens.quantity < this.currently_selling[item_name].price
     )
       return [
         this.trade_failure_embed(

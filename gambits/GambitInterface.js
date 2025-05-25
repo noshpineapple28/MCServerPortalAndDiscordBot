@@ -47,7 +47,7 @@ class GambitInterface {
           tokens_won -= this.tokens_bet[user.discord_user][prediction];
         }
       }
-      user.inventory.tokens += tokens_won;
+      user.inventory.tokens.quantity += tokens_won;
       if (tokens_won > 0)
         winner_text += `\`${x}\` was given a payout of \`${tokens_won}\` Token(s)\n`;
     }
@@ -124,7 +124,7 @@ class GambitInterface {
       return this.#create_error_embed(
         "No existing whitelisted user is linked to your account"
       );
-    if (mc_user.inventory.tokens < amount)
+    if (mc_user.inventory.tokens.quantity < amount)
       return this.#create_error_embed(
         `Insufficient tokens. Requested ${amount}, own ${mc_user.inventory.tokens}`
       );
