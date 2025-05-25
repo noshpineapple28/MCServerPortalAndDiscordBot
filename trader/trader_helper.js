@@ -3,12 +3,12 @@ const { sendEmbeds } = require("../helpers/embeds");
 
 const TRADER = new WanderingTrader();
 
-function summon_trader() {
+async function summon_trader() {
   const embeds = [];
   TRADER.summon();
   TRADER.reroll_shop();
   embeds.push(TRADER.shop_embed_build());
-  sendEmbeds(embeds);
+  TRADER.ware_embeds = await sendEmbeds(embeds);
 
   // set timeout for when he leaves
   let leave = new Date();
@@ -25,19 +25,14 @@ function desummon_trader() {
 
   // set timeout for when he arrives again
   let reappear = new Date();
-  reappear.setHours(reappear.getHours() + Math.floor(Math.random() * 12) + 10);
+  reappear.setHours(reappear.getHours() + Math.floor(Math.random() * 24));
   let cur = new Date();
   setTimeout(summon_trader, reappear.getTime() - cur.getTime());
 }
 
 function attempt_trade(discord_id, item_name) {
   let res = TRADER.attempt_trade(discord_id, item_name);
-  // if the trade worked, tell everyone else that! otherwise, send the error ephemerally
-  if (res[1]) {
-    sendEmbeds(res.splice(0, 1));
-    return true;
-  }
-  return res.splice(0, 1);
+  return res;
 }
 
 module.exports = { summon_trader, attempt_trade };

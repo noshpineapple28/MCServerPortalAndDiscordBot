@@ -5,8 +5,10 @@ const fs = require("fs");
 class WanderingTrader {
   constructor() {
     this.currently_selling = {};
+    this.sold_items = {};
     this.players_hugged = [];
     this.able_to_trade = false;
+    this.ware_embeds = [];
     this.image = "https://people.rit.edu/nam6711/kitch.png";
   }
 
@@ -16,15 +18,21 @@ class WanderingTrader {
 
   desummon() {
     this.able_to_trade = false;
+    this.ware_embeds = [];
+    this.players_hugged = [];
+    this.currently_selling = {};
+    this.sold_items = {};
   }
 
   reroll_shop() {
     // reroll
+    this.ware_embeds = [];
+    this.players_hugged = [];
+    this.currently_selling = {};
+    this.sold_items = {};
     const LOOT_TABLES = JSON.parse(
       fs.readFileSync("./wandering_trader_loot_table.json")
     );
-    this.players_hugged = [];
-    this.currently_selling = {};
     for (let i = 0; i < items_in_shop; i++) {
       let val = Math.random();
       // common loot
@@ -61,7 +69,6 @@ class WanderingTrader {
         this.trade_failure_embed(
           "A sign is stuck to the front of Kitch's shop\n*I've fled town, be back when the coast is clear*"
         ),
-        false,
       ];
     // if item isnt in shop inven, exit
     if (!this.currently_selling[item_name] && readable_item_name !== "hug")
@@ -69,7 +76,6 @@ class WanderingTrader {
         this.trade_failure_embed(
           `Unfortunately, I'm not selling \`${readable_item_name}\` anymore. If my sign says I do, someone probably beat ya to the punch, kid.`
         ),
-        false,
       ];
     // ensure user is linked
     for (let x in USERS)
@@ -79,7 +85,6 @@ class WanderingTrader {
         this.trade_failure_embed(
           "You haven't linked a whitelisted account to your discord, use `link` first!"
         ),
-        false,
       ];
     // see if they have the tokens for it
     if (
@@ -90,7 +95,6 @@ class WanderingTrader {
         this.trade_failure_embed(
           "You're broke kid, come back with more tokens"
         ),
-        false,
       ];
 
     // add token command for hug
@@ -104,7 +108,7 @@ class WanderingTrader {
         // save user inventories
         fs.writeFileSync("./linked_users.json", JSON.stringify(USERS));
       }
-      return [this.trade_hug_embed(text), false];
+      return [this.trade_hug_embed(text)];
     }
 
     // check if in user inven
@@ -118,10 +122,41 @@ class WanderingTrader {
       };
     // descriment their tokens
     user.inventory.tokens.quantity -= this.currently_selling[item_name].price;
+    this.sold_items[item_name] = this.currently_selling[item_name];
     delete this.currently_selling[item_name];
+    // update message
+    let text = "**WARES**\n";
+    text +=
+      "`Hug` - Travelling alone is hard, so if you give me a hug I'll give you coin\n";
+    for (let item in this.currently_selling) {
+      text += `${this.currently_selling[item].quantity} \`${item.replace(
+        "_",
+        " "
+      )}\` - \`${this.currently_selling[item].price}\` Tokens\n`;
+    }
+    text += "\n**SOLD**\n";
+    for (let item in this.sold_items) {
+      text += `~~\`${this.sold_items[item].quantity} ${item.replace(
+        "_",
+        " "
+      )} - ${this.sold_items[item].price} Tokens\`~~\n`;
+    }
+    let embeds = [
+      new EmbedBuilder()
+        .setTitle("The Wandering Thief Arrives!")
+        .setColor(0x915930)
+        .setDescription(text)
+        .setAuthor({
+          name: `Kitch the Thief`,
+          iconURL: this.image,
+        }),
+    ];
+    for (let message of this.ware_embeds) {
+      message.edit({ embeds: embeds });
+    }
     // save user inventories
     fs.writeFileSync("./linked_users.json", JSON.stringify(USERS));
-    return [this.trade_success_embed(readable_item_name), true];
+    return true;
   }
 
   shop_embed_build() {
