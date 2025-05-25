@@ -22,6 +22,12 @@
     { "name": "host_armor_trim", "type": "item", "quantity": 1, "price": 300 },
     { "name": "trial_key", "type": "item", "quantity": 1, "price": 150 },
     { "name": "nautilus_shell", "type": "item", "quantity": 1, "price": 150 },
+    {
+      "name": "experience_bottle",
+      "type": "item",
+      "quantity": 2,
+      "price": 100
+    },
     { "name": "name_tag", "type": "item", "quantity": 1, "price": 100 },
     { "name": "diamond", "type": "item", "quantity": 1, "price": 100 }
   ],
