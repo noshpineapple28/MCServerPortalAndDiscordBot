@@ -25,7 +25,8 @@ function desummon_trader() {
 
   // set timeout for when he arrives again
   let reappear = new Date();
-  reappear.setHours(reappear.getHours() + Math.floor(Math.random() * 24));
+  reappear.setHours(wait.getHours() + floor(Math.random() * 24));
+  reappear.setMinutes(wait.getMinutes() + floor(Math.random() * 60));
   let cur = new Date();
   setTimeout(summon_trader, reappear.getTime() - cur.getTime());
 }

@@ -112,11 +112,16 @@ function startClient() {
     // initiate helper method links
     link_helper(client, CHANNEL_IDS);
     // handle gamble MUST HAPPEN AFTER HELPER IS COMPLETE
-    create_gambit();
-    // create wandering trader in 10 mins after starting
     let wait = new Date();
-    wait.setMinutes(wait.getMinutes() + 10);
+    wait.setHours(wait.getHours() + floor(Math.random() * 24));
+    wait.setMinutes(wait.getMinutes() + floor(Math.random() * 60));
     let cur = new Date();
+    setTimeout(create_gambit, wait.getTime() - cur.getTime());
+    // create wandering trader in 10 mins after starting
+    wait = new Date();
+    wait.setHours(wait.getHours() + floor(Math.random() * 24));
+    wait.setMinutes(wait.getMinutes() + floor(Math.random() * 60));
+    cur = new Date();
     setTimeout(summon_trader, wait.getTime() - cur.getTime());
   });
 
