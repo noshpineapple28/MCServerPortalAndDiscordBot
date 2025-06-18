@@ -2,10 +2,16 @@
 const { spawn } = require("node:child_process");
 const { add_viable_option } = require("./gambits/gambit");
 const { KillAnEntityGambit } = require("./gambits/KillAnEntityGambit");
+const os = require("os");
 // this is a function pointer
 let parseEvent;
 // the minecraft server console
-const MCSERVER = spawn(`powershell`, ["-NoProfile", "-Command", "-"]);
+
+let MCSERVER;
+if (os.platform() === "win32")
+  MCSERVER = spawn(`powershell`, ["-NoProfile", "-Command", "-"]);
+else if (os.platform() === "linux")
+  MCSERVER = spawn(`pwsh`, ["-NoProfile", "-Command", "-"]);
 MCSERVER.stdin.write("cd ..\n");
 // players
 const PLAYERS = [];
