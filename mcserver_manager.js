@@ -5,9 +5,8 @@ const { KillAnEntityGambit } = require("./gambits/KillAnEntityGambit");
 // this is a function pointer
 let parseEvent;
 // the minecraft server console
-const MCSERVER = spawn(`cmd`, [`/k "cd ../"`], {
-  shell: true,
-});
+const MCSERVER = spawn(`powershell`, ["-NoProfile", "-Command", "-"]);
+MCSERVER.stdin.write("cd ..\n");
 // players
 const PLAYERS = [];
 // server states
@@ -42,7 +41,7 @@ MCSERVER.stderr.on("data", (data) => {
 });
 MCSERVER.on("exit", (code) => {
   console.log(`Process ended with ${code}`);
-  io.emit("console_exit", data.toString());
+  io.emit("console_exit", code.toString());
 });
 
 /**
